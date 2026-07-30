@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 7 · Building No-Code AI Chatbots — Dify, Botpress &amp; Voiceflow — Wanderline Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0f14;--bg2:#12161d;--card:#161b24;--card2:#1b212c;--line:#262e3b;--line2:#33405266;
+  --ink:#eef2f7;--ink2:#aab6c6;--ink3:#6d7a8c;
+  --orange:#ff8a2a;--orange2:#ffb066;--orange-dim:#ff8a2a22;
+  --teal:#3dd6c3;--teal-dim:#3dd6c31f;--violet:#a48bff;--violet-dim:#a48bff1f;
+  --gold:#ffd166;--rose:#ff6b8b;--green:#5fe08a;--red:#ff6161;
+  --mono:'JetBrains Mono',monospace;--serif:'Fraunces',serif;--sans:'Manrope',sans-serif;--r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
+::selection{background:var(--orange);color:#111}
+.wrap{max-width:1020px;margin:0 auto;padding:0 26px}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.22}
+a{color:var(--orange2)}
+strong{color:var(--ink)}
+em{color:var(--orange2);font-style:normal}
+p{color:var(--ink2)}
+p strong{color:var(--ink)}
+#progressBar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--gold));width:0;z-index:999;transition:width .1s linear}
+.topnav{position:sticky;top:0;background:#0c0f14e8;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:900}
+.topnav .wrap{display:flex;align-items:center;gap:14px;padding-top:12px;padding-bottom:12px;overflow-x:auto;scrollbar-width:none}
+.topnav .wrap::-webkit-scrollbar{display:none}
+.brand{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--orange);white-space:nowrap}
+.topnav a.nl{font-size:12.5px;font-weight:600;color:var(--ink3);text-decoration:none;white-space:nowrap;padding:5px 10px;border-radius:20px;transition:.2s}
+.topnav a.nl:hover{color:var(--orange);background:var(--orange-dim)}
+.hero{position:relative;padding:88px 0 70px;overflow:hidden;background:radial-gradient(1100px 480px at 78% -12%,#ff8a2a14,transparent 60%),radial-gradient(800px 400px at 8% 110%,#3dd6c30e,transparent 60%)}
+.hero .eyebrow{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.06em;padding:6px 13px;border-radius:100px;border:1px solid var(--line);color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:#ff8a2a55;color:var(--orange2);background:var(--orange-dim)}
+.chip.cool{border-color:#3dd6c355;color:var(--teal);background:var(--teal-dim)}
+.hero h1{font-size:clamp(38px,6vw,64px);font-weight:640;letter-spacing:-.01em;margin-bottom:8px}
+.hero h1 .amp{color:var(--orange);font-style:italic;font-weight:500}
+.hero .sub{font-size:clamp(17px,2.2vw,21px);color:var(--ink2);max-width:740px;margin-top:16px}
+.hero .sub b{color:var(--ink)}
+.heroStats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.hstat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.hstat .n{font-family:var(--serif);font-size:30px;font-weight:640;color:var(--orange)}
+.hstat .l{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+@media(max-width:760px){.heroStats{grid-template-columns:repeat(2,1fr)}}
+.agenda{margin-top:50px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px 28px}
+.agenda h3{font-size:14px;font-family:var(--sans);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.agRow{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px dashed var(--line)}
+.agRow:last-child{border-bottom:none}
+.agRow .t{font-family:var(--mono);font-size:12px;color:var(--orange);min-width:86px;font-weight:500}
+.agRow .name{font-weight:600;font-size:15px;color:var(--ink)}
+.agRow .tag{margin-left:auto;font-size:11px;font-family:var(--mono);color:var(--ink3);border:1px solid var(--line);padding:3px 10px;border-radius:100px;white-space:nowrap}
+.agRow .tag.sim{color:var(--teal);border-color:#3dd6c344}
+.agRow .tag.quiz{color:var(--violet);border-color:#a48bff44}
+section.blk{padding:74px 0 30px}
+.secHead{display:flex;align-items:baseline;gap:18px;margin-bottom:8px}
+.secNum{font-family:var(--mono);font-size:13px;color:var(--orange);border:1px solid #ff8a2a55;background:var(--orange-dim);padding:5px 13px;border-radius:100px;font-weight:500;white-space:nowrap}
+.secHead h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.01em}
+.secTime{font-family:var(--mono);font-size:12px;color:var(--ink3);margin-left:auto;white-space:nowrap}
+.secLede{font-size:18px;color:var(--ink2);max-width:800px;margin:12px 0 34px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:44px 0 0}
+.say{position:relative;background:linear-gradient(180deg,#1a1410,#161b24);border:1px solid #ff8a2a33;border-left:3px solid var(--orange);border-radius:14px;padding:20px 24px 20px 26px;margin:22px 0}
+.say .who{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:10px}
+.say p{color:#e8dccb;font-size:15.5px;margin-bottom:10px}
+.say p:last-child{margin-bottom:0}
+.say.ask{border-left-color:var(--teal);border-color:#3dd6c333;background:linear-gradient(180deg,#101a19,#161b24)}
+.say.ask .who{color:var(--teal)}
+.say.do{border-left-color:var(--violet);border-color:#a48bff33;background:linear-gradient(180deg,#141021,#161b24)}
+.say.do .who{color:var(--violet)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px 26px;margin:20px 0}
+.card h3{font-size:21px;margin-bottom:10px}
+.card h4{font-size:17px;margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:820px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+.defBox{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:20px 0;position:relative}
+.defBox::before{content:'DEFINITION';position:absolute;top:-10px;left:20px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);background:var(--bg);padding:2px 10px;border:1px solid #ffd16644;border-radius:100px}
+.defBox .term{font-family:var(--serif);font-size:19px;color:var(--gold);font-weight:600}
+.defBox p{margin-top:6px;font-size:15.5px}
+.useCase{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;transition:.25s;position:relative;overflow:hidden}
+.useCase:hover{border-color:#ff8a2a66;transform:translateY(-3px)}
+.useCase .ico{font-size:26px;margin-bottom:8px}
+.useCase .co{font-family:var(--mono);font-size:11px;color:var(--orange);letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.useCase h4{font-size:16px;margin:4px 0 6px;font-family:var(--sans);font-weight:700}
+.useCase p{font-size:13.5px;color:var(--ink2);line-height:1.55}
+.analogy{display:flex;gap:16px;background:linear-gradient(135deg,#1b1626,#161b24);border:1px solid #a48bff33;border-radius:14px;padding:20px 24px;margin:20px 0}
+.analogy .ic{font-size:30px;line-height:1}
+.analogy .tt{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--violet);font-weight:700;margin-bottom:6px}
+.analogy p{font-size:15px;color:var(--ink2)}
+.analogy p b{color:var(--ink)}
+.note{border-radius:12px;padding:14px 18px;margin:16px 0;font-size:14.5px;border:1px solid var(--line);background:var(--card2);color:var(--ink2)}
+.note b{color:var(--ink)}
+.note.beg{border-color:#5fe08a44}.note.beg b{color:var(--green)}
+.note.adv{border-color:#ff6b8b44}.note.adv b{color:var(--rose)}
+.note.pro{border-color:#ffd16644}.note.pro b{color:var(--gold)}
+table.tbl{width:100%;border-collapse:collapse;margin:18px 0;font-size:14.5px}
+table.tbl th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);text-align:left;padding:10px 14px;border-bottom:1px solid #ff8a2a44;font-weight:500}
+table.tbl td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+table.tbl tr:hover td{background:#ffffff05}
+table.tbl td:first-child{color:var(--ink);font-weight:600}
+code.k{font-family:var(--mono);font-size:.86em;background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--orange2)}
+pre.code{font-family:var(--mono);font-size:13px;line-height:1.7;background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:18px 22px;overflow-x:auto;margin:16px 0;color:#c7d2e0}
+pre.code .cm{color:#5b6b7f}
+pre.code .st{color:#8fd8a0}
+pre.code .fn{color:#7cc4ff}
+pre.code .kw{color:var(--orange2)}
+.sim{background:linear-gradient(180deg,#101620,#0e131b);border:1px solid #3dd6c344;border-radius:20px;padding:26px 28px;margin:30px 0;position:relative}
+.sim::before{content:'\26A1 INTERACTIVE SIMULATOR';position:absolute;top:-12px;left:22px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--teal);background:var(--bg);padding:3px 12px;border:1px solid #3dd6c355;border-radius:100px;font-weight:700}
+.sim h3{font-size:20px;margin-bottom:4px}
+.sim .simSub{font-size:14px;color:var(--ink3);margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;font-size:13.5px;color:#161009;background:linear-gradient(180deg,var(--orange2),var(--orange));border:none;border-radius:100px;padding:10px 20px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px #ff8a2a44}
+.btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--orange);color:var(--orange);box-shadow:none}
+.btn.sm{padding:7px 15px;font-size:12.5px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.quiz{background:linear-gradient(180deg,#151021,#12161d);border:1px solid #a48bff44;border-radius:20px;padding:26px 28px;margin:34px 0;position:relative}
+.quiz::before{content:'\2726 CHECKPOINT QUIZ';position:absolute;top:-12px;left:22px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--violet);background:var(--bg);padding:3px 12px;border:1px solid #a48bff55;border-radius:100px;font-weight:700}
+.quiz .q{font-family:var(--serif);font-size:19px;font-weight:600;margin:6px 0 18px;color:var(--ink)}
+.opt{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 17px;margin:9px 0;cursor:pointer;transition:.2s;font-size:14.5px;color:var(--ink2)}
+.opt:hover{border-color:var(--violet)}
+.opt .ab{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--violet);border:1px solid #a48bff55;border-radius:8px;min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.correct{border-color:var(--green);background:#5fe08a12;color:var(--ink)}
+.opt.correct .ab{color:var(--green);border-color:var(--green)}
+.opt.wrong{border-color:var(--red);background:#ff616112;opacity:.75}
+.opt.wrong .ab{color:var(--red);border-color:var(--red)}
+.opt.locked{pointer-events:none}
+.quizWhy{display:none;margin-top:16px;border-top:1px dashed #a48bff44;padding-top:16px;font-size:14.5px;color:var(--ink2)}
+.quizWhy.show{display:block;animation:fadeUp .4s ease}
+.quizWhy b{color:var(--violet)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.svgWrap{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:24px 0;overflow-x:auto}
+.svgWrap svg,.svgWrap img{display:block;margin:0 auto;max-width:100%;height:auto;border-radius:10px}
+.svgCap{text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin-top:14px;letter-spacing:.04em}
+.bigQuote{font-family:var(--serif);font-size:clamp(21px,3vw,28px);font-weight:500;font-style:italic;color:var(--ink);text-align:center;max-width:780px;margin:50px auto;line-height:1.5}
+.bigQuote em{color:var(--orange);font-style:italic}
+.footer{border-top:1px solid var(--line);margin-top:80px;padding:44px 0 60px;text-align:center}
+.footer p{font-size:13px;color:var(--ink3)}
+.counter{font-family:var(--serif);font-size:44px;color:var(--orange);font-weight:640;line-height:1}
+.slackDrop{background:linear-gradient(120deg,#12201e,#0f1720);border:1px solid #3dd6c355;border-radius:14px;padding:16px 20px;margin:18px 0;display:flex;gap:14px;align-items:flex-start}
+.slackDrop .av{font-size:26px}
+.slackDrop .nm{font-weight:700;color:var(--teal);font-size:14px}
+.slackDrop .tm{font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin-left:8px}
+.slackDrop p{font-size:14px;color:var(--ink2);margin-top:4px}
+.toggleRow{display:inline-flex;flex-wrap:wrap;background:#0a0d12;border:1px solid var(--line);border-radius:100px;padding:4px;margin-bottom:18px}
+.toggleRow button{font-family:var(--sans);font-weight:700;font-size:13px;border:none;background:transparent;color:var(--ink3);padding:8px 20px;border-radius:100px;cursor:pointer;transition:.2s}
+.toggleRow button.on{background:linear-gradient(180deg,var(--orange2),var(--orange));color:#161009}
+.abGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.abGrid{grid-template-columns:1fr}}
+.promptBox{background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-family:var(--mono);font-size:12px;color:#c7d2e0;line-height:1.7;white-space:pre-wrap;max-height:340px;overflow-y:auto}
+.promptBox .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--orange);display:block;margin-bottom:8px}
+.outBox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;font-size:13.5px;color:var(--ink2);line-height:1.6;max-height:400px;overflow-y:auto}
+.outBox .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--green);display:block;margin-bottom:8px}
+.outBox h5{font-family:var(--serif);color:var(--ink);font-size:15px;margin:10px 0 4px}
+.outBox .sec{font-weight:700;color:var(--orange2);margin-top:10px;font-size:13px}
+.outBox ul{padding-left:18px;margin-top:6px}
+.outBox li{margin:3px 0}
+.gapCallout{background:#20160f;border:1px solid #ffd16655;border-radius:12px;padding:14px 18px;margin-top:16px;font-size:14px;color:var(--ink2)}
+.gapCallout b{color:var(--gold)}
+.pollBtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.pollBtn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--card2);color:var(--ink2);border:1px solid var(--line);border-radius:100px;padding:9px 18px;cursor:pointer;transition:.2s;text-align:left}
+.pollBtn:hover{border-color:var(--orange);color:var(--orange)}
+.pollBtn.sel{background:var(--orange-dim);border-color:var(--orange);color:var(--orange2)}
+.roundHead{display:flex;align-items:center;gap:14px;margin:14px 0}
+.roundBadge{font-family:var(--serif);font-size:28px;color:var(--orange);font-weight:640}
+.roundLabel{font-weight:700;color:var(--ink);font-size:16px}
+.chalCard{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:18px 0;overflow:hidden;transition:.25s}
+.chalCard.open{border-color:#3dd6c366}
+.chalHead{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer}
+.chalHead .cn{font-family:var(--mono);font-size:12px;color:var(--teal);border:1px solid #3dd6c355;border-radius:8px;padding:4px 10px;font-weight:700}
+.chalHead h4{font-family:var(--serif);font-size:19px;flex:1}
+.chalHead .chev{font-family:var(--mono);color:var(--ink3);transition:.3s}
+.chalCard.open .chev{transform:rotate(90deg);color:var(--teal)}
+.chalBody{display:none;padding:0 22px 22px}
+.chalCard.open .chalBody{display:block;animation:fadeUp .4s ease}
+.chalBody .cLabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:16px 0 6px}
+.chalBody .mission{color:var(--ink2);font-size:14.5px}
+.matchScenario{background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:15px;color:var(--ink);margin-bottom:14px;min-height:56px}
+.matchScenario span{color:var(--ink3);font-family:var(--mono);font-size:11px;display:block;margin-bottom:6px;letter-spacing:.1em}
+.matchBtns{display:flex;flex-wrap:wrap;gap:10px}
+.matchBtn{font-family:var(--sans);font-weight:700;font-size:13px;border:1px solid var(--line);background:#141b26;color:var(--ink2);border-radius:10px;padding:10px 16px;cursor:pointer;transition:.2s}
+.matchBtn:hover{border-color:var(--orange)}
+.matchBtn.right{border-color:var(--green);background:#0f1f1c;color:var(--green)}
+.matchBtn.wrong{border-color:var(--red);background:#221214;color:var(--rose)}
+.matchWhy{margin-top:14px;font-size:14px;color:var(--ink2);min-height:24px}
+.matchWhy b{color:var(--teal)}
+.matchScore{font-family:var(--mono);font-size:12px;color:var(--gold);border:1px solid #ffd16655;background:#ffd16611;border-radius:100px;padding:6px 14px;display:inline-block;margin-top:6px}
+.checkRow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.checkRow:last-child{border-bottom:none}
+.checkRow .cb{font-family:var(--mono);font-weight:700;font-size:13px;min-width:20px}
+.checkRow .cb.pass{color:var(--green)}
+.checkRow .cb.fail{color:var(--red)}
+.checkRow b{color:var(--ink);min-width:130px;display:inline-block}
+.metaBox{background:#0a0d12;border:1px solid #3dd6c344;border-radius:10px;padding:12px 16px;margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--teal)}
+/* ---- Class 7 additions ---- */
+.dialWrap{background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:16px}
+.dialWrap input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:100px;background:linear-gradient(90deg,var(--teal),var(--gold),var(--rose));outline:none;margin:14px 0 8px}
+.dialWrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--ink);border:3px solid var(--orange);cursor:pointer;box-shadow:0 2px 10px #0008}
+.dialWrap input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--ink);border:3px solid var(--orange);cursor:pointer}
+.dialEnds{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.dialVal{font-family:var(--mono);font-size:12px;color:var(--orange);letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.msgPills{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px}
+.msgPill{font-family:var(--sans);font-size:12.5px;font-weight:600;text-align:left;background:#141b26;color:var(--ink2);border:1px solid var(--line);border-radius:100px;padding:9px 16px;cursor:pointer;transition:.2s;max-width:100%}
+.msgPill:hover{border-color:var(--teal);color:var(--teal)}
+.msgPill.sel{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:820px){.lanes{grid-template-columns:1fr}}
+.lane{background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:14px 16px;transition:.3s;opacity:.4}
+.lane .lnm{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:5px}
+.lane .ldesc{font-size:12px;color:var(--ink3);line-height:1.5}
+.lane.hot{opacity:1;animation:popIn .35s ease}
+.lane.hot.auto{border-color:var(--teal);background:#0d1a1c}.lane.hot.auto .lnm{color:var(--teal)}
+.lane.hot.det{border-color:var(--gold);background:#1a1710}.lane.hot.det .lnm{color:var(--gold)}
+.lane.hot.esc{border-color:var(--rose);background:#1c1116}.lane.hot.esc .lnm{color:var(--rose)}
+.stepBar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.stepDot{font-family:var(--mono);font-size:11px;font-weight:700;width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:#0a0d12;color:var(--ink3);cursor:pointer;transition:.2s}
+.stepDot:hover{border-color:var(--violet)}
+.stepDot.on{background:var(--violet-dim);border-color:var(--violet);color:var(--violet)}
+.stepDot.done{color:var(--ink2);border-color:#a48bff33}
+.blockTag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);border:1px solid #a48bff55;background:var(--violet-dim);border-radius:100px;padding:4px 11px;font-weight:700;margin-bottom:10px}
+.matrixTbl{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:14px}
+.matrixTbl th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);font-weight:500}
+.matrixTbl td{padding:11px 12px;border-bottom:1px solid var(--line);color:var(--ink2);cursor:pointer;transition:.2s}
+.matrixTbl tr:hover td{background:#ffffff06}
+.matrixTbl tr.act td{background:var(--teal-dim);color:var(--ink)}
+.matrixTbl td.w{font-family:var(--mono);font-size:11.5px;color:var(--ink3);white-space:nowrap}
+.matrixTbl tr.act td.w{color:var(--teal);font-weight:700}
+.calcCards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+@media(max-width:820px){.calcCards{grid-template-columns:1fr}}
+.calcCard{background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:.3s}
+.calcCard .cnm{font-family:var(--serif);font-size:16px;color:var(--ink);font-weight:600;margin-bottom:2px}
+.calcCard .ctier{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.calcCard .cbig{font-family:var(--serif);font-size:26px;font-weight:640;line-height:1.1}
+.calcCard .cnote{font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.5}
+.calcCard.ok{border-color:#5fe08a55}.calcCard.ok .cbig{color:var(--green)}
+.calcCard.warn{border-color:#ffd16655}.calcCard.warn .cbig{color:var(--gold)}
+.calcCard.bad{border-color:#ff6b8b55}.calcCard.bad .cbig{color:var(--rose)}
+.inboxMsg{background:#0a0d12;border:1px solid var(--line);border-left:3px solid var(--ink3);border-radius:10px;padding:11px 15px;margin:8px 0;font-size:13.5px;color:var(--ink2)}
+.inboxMsg .im{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+.inboxMsg.rep{border-left-color:var(--gold)}
+.inboxMsg.money{border-left-color:var(--rose)}
+.tagRep{color:var(--gold)}
+.tagMoney{color:var(--rose)}
+</style>
+</head>
+<body>
+<div id="progressBar"></div>
+<nav class="topnav"><div class="wrap">
+<span class="brand">🧭 Scaler AIML · Class 7</span>
+<a class="nl" href="#why">Why This Matters</a>
+<a class="nl" href="#shapes">Three Shapes of a Bot</a>
+<a class="nl" href="#dify">Dify</a>
+<a class="nl" href="#botpress">Botpress</a>
+<a class="nl" href="#voiceflow">Voiceflow</a>
+<a class="nl" href="#exercise">Same Bot, Three Tools</a>
+<a class="nl" href="#build">Mini Build</a>
+<a class="nl" href="#wrap">Wrap-Up</a>
+</div></nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">
+    <span class="chip hot">CLASS 07 / SESSION SCRIPT</span>
+    <span class="chip">⏱ ~120 MINUTES</span>
+    <span class="chip cool">NO-CODE AI CHATBOTS</span>
+    <span class="chip">HANDS-ON · 3 PLATFORMS</span>
+    <span class="chip">NEW STORY ARC</span>
+  </div>
+  <h1>Building No-Code <span class="amp">AI Chatbots</span></h1>
+  <p class="sub"><b>New arc, new people.</b> Six classes ago we met a selection committee. Today we meet a four-person travel agency in Jaipur — and a problem no amount of prompting fixes, because the problem isn't the answer. It's that <b>nobody is awake to send it.</b> Wanderline Travel gets 312 enquiries a week across four inboxes. 71% are the same six questions. And a large share of them land between 11 PM and 3 AM, from travellers in five time zones, while Divya and Anil are asleep. Farah has the number that hurts: an enquiry answered inside ten minutes converts at roughly <b>1 in 4</b>. Answered six hours later — <b>1 in 22</b>. A Ladakh package for two is ₹85,000. <b>Every night, money walks.</b></p>
+
+  <div class="slackDrop" style="margin-top:32px">
+    <div class="av">💬</div>
+    <div><span class="nm">Farah → team group</span><span class="tm">7:40 AM · Tuesday</span>
+    <p>"Woke up to 19 new enquiries. Four of them said 'never mind, we booked with someone else.' One was a family of six for Spiti in September. Kabir — is there any way people get an answer at 2 AM without one of us being up at 2 AM?"</p></div>
+  </div>
+  <p style="font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--orange2);margin-top:14px">⏰ Peak booking season opens in five weeks. Kabir — 24, marketing intern turned "the laptop guy," zero coding background — has to build something. Today: he builds it three different ways, and learns how to choose.</p>
+
+  <div class="heroStats">
+    <div class="hstat"><div class="n" data-count="3">0</div><div class="l">Platforms Built On</div></div>
+    <div class="hstat"><div class="n" data-count="9">0</div><div class="l">Live Simulators</div></div>
+    <div class="hstat"><div class="n" data-count="5">0</div><div class="l">Checkpoint Quizzes</div></div>
+    <div class="hstat"><div class="n" data-count="1">0</div><div class="l">Bot You Deploy</div></div>
+  </div>
+  <div class="agenda">
+    <h3>Today's Flight Plan · ~120 Minutes</h3>
+    <div class="agRow"><span class="t">00:00–00:12</span><span class="name">Why This Matters — 312 Enquiries, Nobody Awake</span><span class="tag sim">SIM</span></div>
+    <div class="agRow"><span class="t">00:12–00:27</span><span class="name">The Three Shapes of a Bot</span><span class="tag sim">SIM + QUIZ</span></div>
+    <div class="agRow"><span class="t">00:27–00:47</span><span class="name">Tool Demo — Dify (knowledge + LLM apps)</span><span class="tag sim">2 SIMS + QUIZ</span></div>
+    <div class="agRow"><span class="t">00:47–01:05</span><span class="name">Tool Demo — Botpress (open-source flow builder)</span><span class="tag sim">SIM + QUIZ</span></div>
+    <div class="agRow"><span class="t">01:05–01:12</span><span class="name">☕ Stretch break</span><span class="tag">BREAK</span></div>
+    <div class="agRow"><span class="t">01:12–01:27</span><span class="name">Tool Demo — Voiceflow (conversation design + CX)</span><span class="tag sim">SIM + QUIZ</span></div>
+    <div class="agRow"><span class="t">01:27–01:42</span><span class="name">Guided Exercise — Same Bot, Three Tools</span><span class="tag sim">SIM + QUIZ</span></div>
+    <div class="agRow"><span class="t">01:42–01:55</span><span class="name">Mini Build — Ship One Bot For Wanderline</span><span class="tag sim">SIM + 2 CHALLENGES</span></div>
+    <div class="agRow"><span class="t">01:55–02:00</span><span class="name">Wrap-Up — The Free-Tier Arithmetic</span><span class="tag sim">SIM</span></div>
+  </div>
+</div></header>
+
+<!-- ============ SECTION: WHY ============ -->
+<section class="blk" id="why"><div class="wrap">
+  <div class="secHead"><span class="secNum">SETUP</span><h2>Why This Matters — 312 Enquiries, Nobody Awake</h2><span class="secTime">⏱ 12 min</span></div>
+  <p class="secLede">[DROP VOICE] Before we touch a single tool — meet the new team, and the actual shape of their problem.</p>
+
+  <div class="card" style="border-color:#3dd6c344">
+    <h4 style="color:var(--teal)">Meet Wanderline Travel · Jaipur · Founded 2021</h4>
+    <table class="tbl" style="margin-bottom:0"><tbody>
+      <tr><td>Farah Qureshi, 39</td><td>Founder. Ran a hotel front desk for eleven years before this. Knows travel cold. Knows tech not at all.</td></tr>
+      <tr><td>Kabir, 24</td><td><b style="color:var(--orange2)">Our person.</b> Joined eight months ago as a marketing intern, became "the laptop guy" by default. Has never written a line of code.</td></tr>
+      <tr><td>Divya, 31 &amp; Anil, 34</td><td>The two travel consultants. On phones and WhatsApp all day. They are the ones who actually close deals.</td></tr>
+      <tr><td>~20 freelance guides</td><td>A seasonal bench across Ladakh, Spiti, Rajasthan, Kerala. Re-briefed from scratch every March.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="say"><span class="who">🎙 Instructor Says — Cold Open [live, 90 sec]</span>
+    <p>[Action] Put the four-inbox screenshot up. Don't explain it yet. Just let them read the timestamps. [PAUSE 8 sec]</p>
+    <p>"Four places enquiries land. Instagram DMs. WhatsApp. The website form. A Gmail address. Kabir sat down last Sunday and counted a week: <b>312 enquiries. 71% were the same six questions.</b> And look at the clock on the left-hand side. 1:47 AM. 2:12 AM. 3:04 AM."</p>
+    <p>"Now — here's the question I actually want you sitting with. Every single one of those 312 questions is a question ChatGPT could answer perfectly in two seconds. So why does Wanderline still have a problem?"</p>
+    <p style="font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:14px">[Take 2–3 answers from chat before you reveal. Someone will get it. Let them.]</p>
+  </div>
+
+  <div class="card" style="border-color:#ff8a2a44">
+    <h4 style="color:var(--orange2)">The Answer Was Never The Problem</h4>
+    <p style="font-size:14.5px">For six classes you've been getting better and better at <i>producing</i> a good answer — sharper prompts, system prompts, custom Gems and Projects, grounded retrieval, graded citations. All of it assumed <b style="color:var(--ink)">you</b> were the one sitting at the keyboard, asking. Wanderline's problem is the opposite shape. They already know the answers — Farah could recite the cancellation policy in her sleep. What they don't have is <b style="color:var(--ink)">something that is awake at 2:12 AM, sitting on the channel the traveller actually used, that answers without anyone asking it to.</b></p>
+    <p style="font-size:14.5px;margin-top:10px">That thing has a name. It's a bot. And today you build one — three different ways, because there are three genuinely different kinds of tool for it, and picking the wrong one is the mistake this class exists to prevent.</p>
+  </div>
+
+  <div class="say"><span class="who">🎙 Instructor Says — Callback To Class 3 [do not skip this]</span>
+    <p>"Before anybody gets excited about building — remember Air Canada's chatbot from Class 3? The one that invented a bereavement-fare refund policy that didn't exist, and a tribunal made the airline honour it anyway? Or DPD's bot, that got talked into swearing at a customer and writing a poem about how DPD is the worst delivery firm in the world?"</p>
+    <p>"In Class 3 I showed you those as <i>safety</i> stories. Today I want you to see them as something less comfortable. <b>Both of those were badly-built versions of exactly the thing you are building in the next ninety minutes.</b> Somebody at Air Canada shipped a support bot. Somebody at DPD shipped a support bot. Neither of them was stupid, and neither of them was under-resourced. They just built a bot nobody supervised closely enough — and there was no locked branch anywhere in it."</p>
+    <p>"Kabir is about to make the same mistake in front of you, at a much smaller scale, and then fix it. Watch for the moment it happens."</p>
+  </div>
+
+  <div class="sim">
+    <h3>📥 SIM 1 · The Four-Inbox Week</h3>
+    <p class="simSub">Kabir's actual audit. Click through each channel — watch what repeats, and watch what got missed.</p>
+    <div class="toggleRow" id="inboxToggle">
+      <button class="on" data-i="ig">📸 Instagram DM</button>
+      <button data-i="wa">💬 WhatsApp</button>
+      <button data-i="form">🌐 Website Form</button>
+      <button data-i="mail">✉️ Gmail</button>
+    </div>
+    <div class="outBox" id="inboxOut"></div>
+    <div class="gapCallout" id="inboxGap"></div>
+  </div>
+
+  <div class="say"><span class="who">🎙 Instructor Says — The Number That Matters</span>
+    <p>"In travel sales there's a metric called speed-to-lead, and it is brutally simple: how fast did you reply. Farah pulled her own numbers. Replied inside ten minutes — roughly one in four booked. Replied after six hours — one in twenty-two. <b>Same enquiry. Same package. Same price. Same Divya writing the same lovely reply.</b> The only variable that changed was the clock."</p>
+    <p>"So when I say a chatbot is worth building here, I'm not saying it because bots are trendy in 2026. I'm saying it because the thing being optimised isn't answer quality. It's <i>latency</i>. And a bot is the only thing in this room that doesn't sleep."</p>
+  </div>
+
+  <div class="slackDrop"><div class="av">💬</div><div><span class="nm">Chat Drop — minute 9</span><span class="tm">30 sec</span><p>"Drop in chat — one question a business you've dealt with answers so often they should have automated it. One line."</p></div></div>
+
+  <div class="card">
+    <h4 style="color:var(--orange)">Why this matters for you — 2026 job reality</h4>
+    <ul style="padding-left:18px;margin-top:8px;color:var(--ink2);font-size:14.5px;line-height:1.9">
+      <li>"Build me a bot that answers our FAQs" is one of the most common paid AI briefs a beginner will ever receive — freelance, agency, or in-house.</li>
+      <li>The three tools today map to <b style="color:var(--ink)">three different job titles</b>: AI app builder, conversational/automation engineer, and conversation designer / CX. Those are separate roles with separate JDs.</li>
+      <li><b style="color:var(--ink)">Nobody is hiring you to write code for this.</b> They're hiring you to make the right call between platforms and then not blow the budget.</li>
+      <li>Every one of the three has a free tier that <i>looks</i> generous and stops being generous at a very specific, calculable number. Knowing that number before you pitch a client is the actual professional skill.</li>
+      <li>"Conversation designer" is a real, listed job function now — and Voiceflow is the tool most of those JDs name.</li>
+    </ul>
+  </div>
+
+  <div class="note pro"><b>Instructor — before you teach this live:</b> All three platforms ship changes monthly, and pricing especially moves. Everything in this script was verified in <b>July 2026</b> — Dify v1.16.1, Botpress post-May-2026 pricing, Voiceflow's four-plan structure. Open each pricing page yourself the morning of class and correct any number that's moved on the slide. Teaching a stale free-tier limit is the one error students will actually get burned by.</div>
+
+  <div class="say"><span class="who">🎙 Instructor Says</span>
+    <p>"By the end of today Kabir has a bot answering Wanderline's six repeat questions at 2 AM. More importantly — so do you, and you'll know which of the three tools you'd bet a client's money on."</p>
+  </div>
+  <div class="divider"></div>
+</div></section>
+
+<!-- ============ SECTION: THREE SHAPES ============ -->
+<section class="blk" id="shapes"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 1</span><h2>The Three Shapes of a Bot</h2><span class="secTime">⏱ 15 min</span></div>
+  <p class="secLede">One framework for the whole class. Everything else today hangs off it. Three tools, three genuinely different philosophies — and one question that tells them apart.</p>
+
+  <div class="analogy">
+    <div class="ic">🚕</div>
+    <div><div class="tt">The One Analogy</div>
+    <p>Think about three ways to get a guest from Leh airport to their hotel. <b>One:</b> you hand a trusted local driver the address and let him pick the route — he knows the city, he'll handle the roadblock. <b>Two:</b> you write the route down turn by turn, because there's a checkpoint at km 9 where saying the wrong thing gets you sent back. <b>Three:</b> before anyone drives anywhere, you and the team sit around a map and agree the route on paper, so everyone signs off and nobody improvises. All three get the guest there. They are not interchangeable — and which one you pick depends entirely on <b>how much you can afford to let the driver decide.</b></p></div>
+  </div>
+
+  <div class="defBox"><span class="term">The One Question That Sorts All Three</span><p><b style="color:var(--ink)">"Who decides what happens next in this conversation — the model, or me?"</b> That's it. Every difference between Dify, Botpress and Voiceflow is downstream of where you sit on that dial. Lean model-side and you get flexibility and fast setup, but you can't guarantee exact wording. Lean you-side and you get guarantees and auditability, but you have to anticipate what people will say. Most real bots need both, in different places.</p></div>
+
+  <div class="svgWrap">
+    <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--sans)">
+      <defs>
+        <marker id="ar7" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="var(--ink3)"/>
+        </marker>
+        <linearGradient id="g7" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#3dd6c3"/><stop offset="50%" stop-color="#ffd166"/><stop offset="100%" stop-color="#ff6b8b"/>
+        </linearGradient>
+      </defs>
+      <text x="450" y="26" text-anchor="middle" fill="var(--ink3)" font-size="11" font-family="var(--mono)" letter-spacing="2">WHO DECIDES WHAT HAPPENS NEXT?</text>
+      <rect x="60" y="44" width="780" height="8" rx="4" fill="url(#g7)"/>
+      <text x="62" y="74" fill="var(--teal)" font-size="11" font-family="var(--mono)" font-weight="700">THE MODEL DECIDES</text>
+      <text x="838" y="74" text-anchor="end" fill="var(--rose)" font-size="11" font-family="var(--mono)" font-weight="700">YOU DECIDE, STEP BY STEP</text>
+
+      <g><rect x="60" y="100" width="240" height="118" rx="14" fill="#3dd6c31a" stroke="#3dd6c366"/>
+      <text x="180" y="128" text-anchor="middle" fill="var(--teal)" font-size="14" font-weight="700">DIFY</text>
+      <text x="180" y="150" text-anchor="middle" fill="var(--ink)" font-size="11.5">Knowledge-linked app builder</text>
+      <text x="180" y="172" text-anchor="middle" fill="var(--ink2)" font-size="10.5">You supply documents + instructions.</text>
+      <text x="180" y="188" text-anchor="middle" fill="var(--ink2)" font-size="10.5">The model composes every reply.</text>
+      <text x="180" y="206" text-anchor="middle" fill="var(--ink3)" font-size="10">Fastest to a working FAQ bot</text></g>
+
+      <g><rect x="330" y="100" width="240" height="118" rx="14" fill="#ffd1661a" stroke="#ffd16666"/>
+      <text x="450" y="128" text-anchor="middle" fill="var(--gold)" font-size="14" font-weight="700">BOTPRESS</text>
+      <text x="450" y="150" text-anchor="middle" fill="var(--ink)" font-size="11.5">Open-source flow builder</text>
+      <text x="450" y="172" text-anchor="middle" fill="var(--ink2)" font-size="10.5">You draw the flow and decide which</text>
+      <text x="450" y="188" text-anchor="middle" fill="var(--ink2)" font-size="10.5">branches the model is allowed to run.</text>
+      <text x="450" y="206" text-anchor="middle" fill="var(--ink3)" font-size="10">Both hands on the wheel</text></g>
+
+      <g><rect x="600" y="100" width="240" height="118" rx="14" fill="#ff6b8b1a" stroke="#ff6b8b66"/>
+      <text x="720" y="128" text-anchor="middle" fill="var(--rose)" font-size="14" font-weight="700">VOICEFLOW</text>
+      <text x="720" y="150" text-anchor="middle" fill="var(--ink)" font-size="11.5">Conversation design tool</text>
+      <text x="720" y="172" text-anchor="middle" fill="var(--ink2)" font-size="10.5">The conversation is designed, reviewed</text>
+      <text x="720" y="188" text-anchor="middle" fill="var(--ink2)" font-size="10.5">and signed off before it is built.</text>
+      <text x="720" y="206" text-anchor="middle" fill="var(--ink3)" font-size="10">Built for teams, voice &amp; CX</text></g>
+
+      <rect x="60" y="240" width="780" height="44" rx="12" fill="var(--card2)" stroke="var(--line)"/>
+      <text x="450" y="260" text-anchor="middle" fill="var(--ink2)" font-size="11.5">All three ship a working chatbot. None of them is "the good one."</text>
+      <text x="450" y="276" text-anchor="middle" fill="var(--orange2)" font-size="11.5" font-weight="700">The skill is matching the shape of the tool to the shape of the risk.</text>
+    </svg>
+    <div class="svgCap">ONE DIAL, THREE TOOLS · WHO OWNS THE NEXT TURN</div>
+  </div>
+
+  <div class="card" style="border-color:#ffd16655;background:linear-gradient(135deg,#1a1710,#161b24)">
+    <h4 style="color:var(--gold)">🧠 Remember It As Three Words — <span style="font-family:var(--mono);letter-spacing:.04em">Docs, Detours, Design</span></h4>
+    <p style="font-size:14.5px">You will forget which platform had which feature. You will not forget three words, so take these instead:</p>
+    <div class="grid3" style="margin-top:14px">
+      <div class="defBox" style="margin:0;border-color:#3dd6c355"><span class="term" style="color:var(--teal)">DOCS · Dify</span><p style="font-size:14px">Documents in, answers out. You hand it what you know and it does the talking.</p></div>
+      <div class="defBox" style="margin:0;border-color:#ffd16655"><span class="term" style="color:var(--gold)">DETOURS · Botpress</span><p style="font-size:14px">Planned branches around the risky bits. Open road mostly, hard-coded detours where it matters.</p></div>
+      <div class="defBox" style="margin:0;border-color:#ff6b8b55"><span class="term" style="color:var(--rose)">DESIGN · Voiceflow</span><p style="font-size:14px">Approved before it's built. The conversation is agreed on paper first.</p></div>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink3);margin-top:14px">[Instructor: say all three out loud, in order, and ask the room to say them back once. Then reprise them in the wrap-up. This is the one thing that should survive the session intact.]</p>
+  </div>
+
+  <table class="tbl"><thead><tr><th>Shape</th><th>What you actually hand it</th><th>What you get</th><th>What you give up</th></tr></thead><tbody>
+    <tr><td>Knowledge-linked app builder<br><span style="color:var(--teal);font-weight:400">Dify</span></td><td>Documents + a system prompt + a model choice</td><td>A working bot in under an hour; answers questions you never anticipated</td><td>Exact control of wording; it will paraphrase</td></tr>
+    <tr><td>Flow builder with intent detection<br><span style="color:var(--gold);font-weight:400">Botpress</span></td><td>A drawn flow, named intents, and specific spots where the model is allowed to improvise</td><td>Guaranteed exact text where it matters; a visible, auditable path</td><td>Time; you have to anticipate the branches</td></tr>
+    <tr><td>Conversation design tool<br><span style="color:var(--rose);font-weight:400">Voiceflow</span></td><td>A designed conversation on a shared canvas, with copy your team approves</td><td>A reviewable artifact; voice as a first-class channel; team sign-off before build</td><td>Overhead — it's overkill if you're one person answering six FAQs</td></tr>
+  </tbody></table>
+
+  <div class="sim">
+    <h3>🎛 SIM 2 · The Control Dial</h3>
+    <p class="simSub">Drag it. Watch what you gain, what you lose, and which tool sits there.</p>
+    <div class="dialWrap">
+      <div class="dialEnds"><span>Model decides</span><span>You decide</span></div>
+      <input type="range" id="ctrlDial" min="0" max="100" value="15" step="1">
+      <div class="dialVal" id="ctrlVal">Control level — 15%</div>
+    </div>
+    <div class="outBox" id="ctrlOut"></div>
+  </div>
+
+  <div class="analogy" style="border-color:#ffd16644;background:linear-gradient(135deg,#1a1710,#161b24)">
+    <div class="ic">👨‍🍳</div>
+    <div><div class="tt" style="color:var(--gold)">Second Analogy · Same Idea, Different Kitchen</div>
+    <p>If the taxi didn't land for you, try a restaurant. <b>Dify is handing a chef the ingredients and trusting his instincts</b> — he'll cook something good, and it won't be identical twice. <b>Botpress is a recipe card with three steps marked "exact, no substitutions"</b> — improvise everywhere else, but the sauce ratio is the sauce ratio. <b>Voiceflow is the whole menu, written and approved by the owner before the kitchen opens</b> — nothing gets served that nobody signed off on. Three kitchens, three ways to be right, and you would not run a wedding banquet the way you run a Tuesday lunch.</p></div>
+  </div>
+
+  <div class="note beg"><b>Beginner Note:</b> You do not have to memorise which tool is "flow" and which is "knowledge." Just remember the dial question — <i>who decides what happens next</i> — and everything else follows. Then <b>Docs, Detours, Design</b> for which tool is which.</div>
+  <div class="note pro"><b>Intermediate Note:</b> Real production bots are almost never at one end. The common professional pattern is a mostly-model bot with three or four deterministic hard-locked branches around money, cancellation, and anything legal.</div>
+  <div class="note adv"><b>Advanced Note:</b> This dial is the same trade-off you'll meet again in Class 10 as "how much autonomy do I give an agent." Today it's one conversation. Later it's a multi-step task. The tension never goes away — you just get better at placing the dial deliberately instead of by accident.</div>
+
+  <div class="quiz">
+    <p class="q">Quiz 1 · Three briefs land on your desk. <b>(i)</b> A bot that must answer strictly from a 200-page internal policy manual. <b>(ii)</b> A bot that must never state a refund percentage incorrectly, not once. <b>(iii)</b> A bot whose conversation a design and marketing team must review and approve before engineering builds anything. Which mapping is right?</p>
+    <div class="opt" data-r="w"><span class="ab">A</span>(i) flow builder · (ii) conversation-design tool · (iii) knowledge-linked builder</div>
+    <div class="opt" data-r="c"><span class="ab">B</span>(i) knowledge-linked app builder · (ii) flow builder with deterministic branches · (iii) conversation-design tool</div>
+    <div class="opt" data-r="w"><span class="ab">C</span>(i) conversation-design tool · (ii) knowledge-linked builder · (iii) flow builder</div>
+    <div class="opt" data-r="w"><span class="ab">D</span>All three are the same job — the platform is irrelevant, only the prompt matters</div>
+    <div class="quizWhy"><b>Why B?</b> Brief (i) is a retrieval problem — a big pile of documents, unpredictable questions, no exact-wording requirement. That's a knowledge-linked builder. Brief (ii) is the opposite: a specific number that must be exactly right every single time, which means it cannot be generated on the fly — it belongs in a deterministic branch in a flow builder. Brief (iii) isn't a technical requirement at all, it's an <i>organisational</i> one — several non-engineers need to read and approve the conversation before build effort is spent, which is precisely what a conversation-design canvas exists to produce.</div>
+  </div>
+  <div class="divider"></div>
+</div></section>
+
+<!-- ============ SECTION: DIFY ============ -->
+<section class="blk" id="dify"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 2</span><h2>Tool Demo — Dify</h2><span class="secTime">⏱ 20 min</span></div>
+  <p class="secLede">Left end of the dial. Dify is where Kabir gets something working today — because Wanderline's six repeat questions are all already written down somewhere, and Dify's whole premise is "point me at the documents."</p>
+
+  <div class="defBox"><span class="term">What Is Dify?</span><p>An <b style="color:var(--ink)">open-source</b> platform for building LLM-powered apps without writing code. You pick a model, write instructions, attach a knowledge base of your own documents, and publish — as a hosted web app, an embeddable widget, or an API. You can use their cloud or self-host the whole thing on your own server, which matters a lot the moment a client says the word "data."</p></div>
+
+  <div class="note pro"><b>Insider fact — say this, it reframes the whole session:</b> Two of today's three tools are fully open-source, and the scale is not what people assume. <b>Dify sits at roughly 150,000 GitHub stars and 23,000+ forks</b> — that puts it among the most-starred open-source projects in existence, ahead of most household-name frameworks you could name. <b>Botpress was created in 2016</b> — six years before ChatGPT shipped. It was a chatbot company through the entire pre-LLM era and survived the transition, which is why its flow-builder thinking feels more mature than its AI features. And here's the part you can't see from outside: <b>a self-hosted deployment carries no vendor branding anywhere.</b> No logo, no "powered by," nothing in the page source that names the platform. So when you've talked to a support bot on some company's website and had no idea what it was built on — that's the point. <b>You have just learned the tool stack behind bots you already use.</b></div>
+
+  <div class="card">
+    <h4 style="color:var(--orange2)">Dify app types — as of v1.16.1, July 2026</h4>
+    <p style="font-size:14.5px">This is the part most tutorials get wrong, because Dify reorganised it. There are five options in the create-app screen, but they are <b style="color:var(--ink)">not five equals</b>:</p>
+    <table class="tbl" style="margin-bottom:8px"><thead><tr><th>Type</th><th>Status</th><th>What it's for</th></tr></thead><tbody>
+      <tr><td>Chatflow</td><td><span style="color:var(--green)">Primary</span></td><td>A multi-turn conversation on the visual workflow canvas. Triggers on every turn, holds memory, supports conversation variables. <b style="color:var(--ink)">This is what a real chatbot should be built as.</b></td></tr>
+      <tr><td>Workflow</td><td><span style="color:var(--green)">Primary</span></td><td>Single-turn task automation — in one side, out the other. Supports batch runs. Not a conversation.</td></tr>
+      <tr><td>Chatbot</td><td><span style="color:var(--gold)">Legacy interface</span></td><td>The simple form-based chatbot. Same engine underneath, simpler screen. Fine for a first five minutes.</td></tr>
+      <tr><td>Agent</td><td><span style="color:var(--gold)">Legacy interface</span></td><td>The old tool-calling agent screen. Note: separately, Dify shipped a new <b style="color:var(--ink)">Dify Agent (beta)</b> in v1.16.0 with a sandbox and a skill system — that's a different, newer thing.</td></tr>
+      <tr><td>Text Generator</td><td><span style="color:var(--gold)">Legacy interface</span></td><td>One-shot generation, no conversation.</td></tr>
+    </tbody></table>
+    <p style="font-size:13.5px;color:var(--ink3)">Dify's own docs are explicit: the three legacy options run on the same workflow engine underneath, they just wear simpler interfaces. <b style="color:var(--orange2)">Teach Chatflow. Mention the rest so students recognise them.</b></p>
+  </div>
+
+  <div class="note pro"><b>Version note — say this out loud:</b> Dify v2.0 is in beta as of now, and it brings two significant things: a <b>Knowledge Pipeline</b> (document ingestion becomes its own visual node-based flow, so you control chunking and transformation instead of accepting defaults) and a queue-based graph engine. If a student is starting a serious project this month, tell them to check whether 2.0 has gone stable before they commit to a 1.x setup.</div>
+
+  <div class="say"><span class="who">🎙 Instructor Says</span>
+    <p>"Watch what I actually do here, because the whole demo is four decisions and none of them are code. Which model. What instructions. How much freedom. Which documents. That's the entire job. If that feels too easy — good. That's the point of no-code. The hard part isn't building it, it's knowing what to build and when to stop trusting it."</p>
+  </div>
+
+  <div class="card">
+    <h4 style="color:var(--orange2)">Step-by-step demo (share screen)</h4>
+    <p style="font-size:14.5px"><b>Step 1 —</b> Go to <code class="k">dify.ai</code>, sign up, land in the Studio. Click <b style="color:var(--ink)">Create App → Chatflow</b>. Name it <i>Wanderline Enquiry Desk</i>.</p>
+    <p style="font-size:14.5px"><b>Step 2 —</b> Open the LLM node. Pick your model in the top-right selector. Point out: this is a <i>dropdown</i>, not a rewrite — Dify is model-agnostic, and swapping providers later is one click. Say why that matters commercially.</p>
+    <p style="font-size:14.5px"><b>Step 3 —</b> Write the system prompt in the Instructions box. Use the one below verbatim — every line in it is load-bearing and we'll walk through why.</p>
+    <p style="font-size:14.5px"><b>Step 4 —</b> Open the model parameters. Set <b style="color:var(--ink)">Temperature to 0.2.</b> Do not skip explaining this — run SIM 3 here.</p>
+    <p style="font-size:14.5px"><b>Step 5 —</b> Go to <b style="color:var(--ink)">Knowledge</b> in the top nav. Create a knowledge base, upload Wanderline's four documents. Let it chunk and embed — narrate the wait, this is Class 5's retrieval step happening in front of them.<br><span style="color:var(--ink3);font-size:13.5px">↳ <b style="color:var(--green)">Say this while the progress bar runs:</b> "If 'chunking' doesn't ring a bell — Class 5 covered this. It just means splitting your documents into searchable pieces. Same mechanic as before, this time happening behind a progress bar instead of on a concept slide."</span></p>
+    <p style="font-size:14.5px"><b>Step 6 —</b> Back in the Chatflow, add a <b style="color:var(--ink)">Knowledge Retrieval</b> node before the LLM node and attach the knowledge base. Wire it in. This is the single most important click of the demo.</p>
+    <p style="font-size:14.5px"><b>Step 7 —</b> Test in the debug panel on the right. Ask <i>"what's your cancellation policy for Spiti?"</i> Then <b style="color:var(--ink)">Publish → Run App</b>, and open the public URL. It's live. It's on the internet. Kabir has a bot.</p>
+  </div>
+
+  <div class="card" style="border-color:#3dd6c344">
+    <h4 style="color:var(--teal)">The four documents Kabir uploads</h4>
+    <p style="font-size:14.5px">Nothing new was written for this. All four already existed on Farah's laptop — which is exactly why this use case is so common in the real world.</p>
+    <ul style="padding-left:18px;margin-top:8px;color:var(--ink2);font-size:14.5px;line-height:1.85">
+      <li><b style="color:var(--ink)">Packages master PDF</b> — Ladakh 6D/5N, Spiti 7D/6N, Rajasthan circuit, Kerala backwaters. Inclusions, exclusions, per-person pricing.</li>
+      <li><b style="color:var(--ink)">Cancellation &amp; refund policy</b> — the tiered slab. 30+ days, 15–29 days, under 15 days.</li>
+      <li><b style="color:var(--ink)">Seasonality table</b> — best months per circuit, road-closure windows, altitude advisories.</li>
+      <li><b style="color:var(--ink)">Visa &amp; permits FAQ</b> — inner-line permits for Ladakh, what Wanderline does and explicitly does not do on visas.</li>
+    </ul>
+  </div>
+
+  <pre class="code"><span class="cm"># Wanderline Enquiry Desk — system prompt (paste into Dify Instructions)</span>
+
+You are the enquiry assistant for Wanderline Travel, a small
+travel agency based in Jaipur, India.
+
+<span class="kw">YOUR JOB</span>
+Answer traveller questions about Wanderline's trips using ONLY
+the retrieved context from the knowledge base.
+
+<span class="kw">HARD RULES</span>
+1. If the answer is not in the retrieved context, say exactly:
+   <span class="st">"I don't have that detail — let me get Divya to confirm."</span>
+   Then ask for their name and phone number.
+2. Never invent a price, a date, a refund percentage, or a
+   permit requirement. Not even an approximate one.
+3. Never give visa advice beyond what the Visa &amp; Permits FAQ says.
+4. If someone sounds distressed, stuck, or is describing a
+   problem with a trip already in progress — do not try to
+   solve it. Say: <span class="st">"I'm getting a human on this right now."</span>
+
+<span class="kw">STYLE</span>
+Warm, brief, plain English. Two to four sentences.
+No emoji. Never say "as an AI."
+Always end an answer with one relevant follow-up question.
+
+<span class="kw">ALWAYS CAPTURE</span>
+Before the conversation ends, get: travel month, number of
+travellers, and one contact detail.</pre>
+
+  <div class="say"><span class="who">🎙 Instructor Says — Walk the prompt line by line</span>
+    <p>"Four things in there I want you to notice, because they're the difference between a demo and something Farah can actually leave running overnight."</p>
+    <p>"<b>One</b> — 'ONLY the retrieved context.' That's the leash. Without it, the model happily fills gaps with plausible fiction. <b>Two</b> — I gave it the <i>exact words</i> to say when it doesn't know. Never leave the failure case to the model's imagination. <b>Three</b> — rule 4 is an escape hatch. A bot's most valuable skill is knowing when to stop being a bot. <b>Four</b> — 'ALWAYS CAPTURE.' Farah doesn't need a bot that answers questions. She needs a bot that answers questions <i>and hands Divya a warm lead at 8 AM.</i> Those are not the same product."</p>
+  </div>
+
+  <div class="card" style="border-color:#a48bff44">
+    <h4 style="color:var(--violet)">↩︎ You Have Written This Prompt Before — It's RCTFC From Class 2</h4>
+    <p style="font-size:14.5px">Look at the shape of that prompt again, and you'll find all five elements from Class 2 sitting in it, unlabelled:</p>
+    <table class="tbl" style="margin-bottom:8px"><thead><tr><th>Class 2 element</th><th>Where it lives in the Dify prompt</th></tr></thead><tbody>
+      <tr><td><b style="color:var(--violet)">R</b>ole</td><td>"You are the enquiry assistant for Wanderline Travel"</td></tr>
+      <tr><td><b style="color:var(--violet)">C</b>ontext</td><td>"a small travel agency based in Jaipur, India"</td></tr>
+      <tr><td><b style="color:var(--violet)">T</b>ask</td><td>"Answer traveller questions using ONLY the retrieved context"</td></tr>
+      <tr><td><b style="color:var(--violet)">F</b>ormat</td><td>STYLE — two to four sentences, warm, plain English, no emoji, end with a follow-up question</td></tr>
+      <tr><td><b style="color:var(--violet)">C</b>onstraints</td><td>The four HARD RULES — never invent a price, date, refund percentage or permit requirement</td></tr>
+    </tbody></table>
+    <p style="font-size:14.5px;margin-top:10px"><b style="color:var(--ink)">RCTFC from Class 2 again — just living permanently inside a no-code builder instead of being retyped by you every session.</b> That is the actual difference between prompting and building: in Class 2 you wrote this into a chat box once and it evaporated. Here you write it into a settings field and it applies to every one of the next 10,000 conversations, at 2 AM, without you.</p>
+    <p style="font-size:13.5px;color:var(--ink3);margin-top:10px">One honest catch: no-code builders never label their fields R/C/T/F/C. Dify calls it "Instructions," Botpress calls it the node prompt, Voiceflow splits it across blocks. <b style="color:var(--ink2)">Recognising the shape when nobody labels it is the transferable skill</b> — and it's why Class 2 was worth sitting through.</p>
+  </div>
+
+  <div class="sim">
+    <h3>🌡 SIM 3 · The Temperature Dial</h3>
+    <p class="simSub">Same question, same documents, same prompt. Only temperature moves. Drag it.</p>
+    <div class="dialWrap">
+      <div class="dialEnds"><span>0.0 — literal</span><span>1.0 — inventive</span></div>
+      <input type="range" id="tempDial" min="0" max="100" value="20" step="10">
+      <div class="dialVal" id="tempVal">Temperature — 0.2</div>
+    </div>
+    <div class="promptBox" style="margin-bottom:14px"><span class="lbl">TRAVELLER ASKS</span>I have to cancel my Spiti trip, it's 20 days away. How much do I get back?</div>
+    <div class="outBox" id="tempOut"></div>
+    <div class="gapCallout" id="tempGap"></div>
+  </div>
+
+  <div class="note beg"><b>Beginner Note:</b> Temperature is not an "accuracy" slider. It controls how much variety the model allows itself when choosing each next word. Low means predictable and repetitive. High means creative and unreliable. For anything factual, go low.</div>
+
+  <div class="sim">
+    <h3>📚 SIM 4 · Knowledge Base — Unlinked vs Linked</h3>
+    <p class="simSub">The single most important click in Dify. Same bot, same prompt, same temperature. One difference: is the Knowledge Retrieval node wired in?</p>
+    <div class="toggleRow" id="kbToggle">
+      <button class="on" data-k="off">🚫 No knowledge base</button>
+      <button data-k="on">✅ Knowledge base linked</button>
+    </div>
+    <div class="outBox" id="kbOut"></div>
+    <div class="gapCallout" id="kbGap"></div>
+  </div>
+
+  <div class="note pro"><b>Intermediate Note:</b> After the demo, go to the app's <b>Logs</b> tab and open a conversation. You'll see the retrieved chunks that fed each answer. When a client says "why did it say that," this screen is your entire defence.</div>
+  <div class="note adv"><b>Advanced Note:</b> Dify's default chunking is fine for clean prose and poor for tables — which is exactly the shape of a pricing sheet or a refund slab. If your bot keeps mangling numbers, the fix is almost never the prompt; it's the chunking. Splitting the pricing table into one row per document, or moving to v2.0's Knowledge Pipeline for controlled chunking, fixes more than any prompt tweak will.</div>
+
+  <div class="card" style="border-color:#ff6b8b44">
+    <h4 style="color:var(--rose)">Dify Danger — The 200 Credits Are Not Monthly</h4>
+    <p style="font-size:14.5px">The Dify Cloud Sandbox plan gives you <b style="color:var(--ink)">200 message credits in total</b> — not 200 per month. Along with that: 50 knowledge documents, 50 MB of knowledge storage, 5 apps, 1 workspace, 1 seat, 30 days of log history. Read that first number again, because it's the one that catches people. <b style="color:var(--ink)">Wanderline gets 312 enquiries a week.</b> A single busy Saturday burns the entire free allowance. Dify's free tier is a place to learn and demo — it is not a place to run a business. The honest answer for a real deployment is a paid plan or self-hosting the open-source version on your own server.</p>
+  </div>
+
+  <div class="say"><span class="who">🎙 Instructor Says — Take The Pressure Off [say this the first time a price appears]</span>
+    <p>"Quick note before anyone starts frantically typing numbers. You're going to hear three different pricing structures today — credits, messages, AI spend, seats — and roughly fifteen specific figures between them. <b>All of them are in your dashboard notes after class. Do not try to memorise them live.</b>"</p>
+    <p>"Remember the one thing that doesn't change, because it's the only part that's actually a skill: <b>multiply conversations × messages before you quote a client anything free.</b> The figures move every few months. That habit doesn't."</p>
+  </div>
+
+  <div class="quiz">
+    <p class="q">Quiz 2 · A no-code bot with a linked knowledge base is asked something that appears nowhere in its uploaded documents — and it confidently invents an answer anyway. Which change most directly reduces this?</p>
+    <div class="opt" data-r="w"><span class="ab">A</span>Raise the temperature so the model has more freedom to reason it out</div>
+    <div class="opt" data-r="w"><span class="ab">B</span>Upload many more documents so the knowledge base is bigger overall</div>
+    <div class="opt" data-r="c"><span class="ab">C</span>Instruct it in the system prompt to answer only from retrieved context and give it the exact words to use when it can't — and lower the temperature</div>
+    <div class="opt" data-r="w"><span class="ab">D</span>Switch to a larger, more expensive model — bigger models don't do this</div>
+    <div class="quizWhy"><b>Why C?</b> Two levers, both in your hands. The system prompt is where you forbid answering beyond retrieved context <i>and</i> supply the exact fallback sentence, so the model isn't left inventing its own way to fail. Low temperature makes it stick to that instruction instead of drifting. A is backwards — more freedom means more invention. B doesn't help; irrelevant documents don't make a missing fact appear, they just add retrieval noise. D is the most tempting wrong answer: bigger models are often <i>more</i> fluent when they're wrong, which makes the problem harder to spot, not easier.</div>
+  </div>
+  <div class="divider"></div>
+</div></section>
+
+<!-- ============ SECTION: BOTPRESS ============ -->
+<section class="blk" id="botpress"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 3</span><h2>Tool Demo — Botpress</h2><span class="secTime">⏱ 18 min</span></div>
+  <p class="secLede">Middle of the dial. Kabir's Dify bot has been live for three days and it works — until it doesn't, and the way it fails is the reason this second tool exists.</p>
+
+  <div class="slackDrop"><div class="av">💬</div><div><span class="nm">Divya → team group</span><span class="tm">9:20 AM · Thursday</span><p>"The bot told Mr. Raghavan he'd get 'most of his money back' on a 12-day-out cancellation. Farah, the actual slab for under 15 days is 25%. He's screenshotted it. He's quoting it back at me."</p></div>
+  </div>
+
+  <div class="card" style="border-color:#ff8a2a44">
+    <h4 style="color:var(--orange2)">The Wall Dify Just Hit</h4>
+    <p style="font-size:14.5px">Nothing broke. The knowledge base had the correct slab. Temperature was 0.2. The prompt said don't invent numbers. And a language model still <b style="color:var(--ink)">paraphrased</b> "25% refund" into "most of his money back," because paraphrasing is the thing language models do — it's not a bug you can prompt your way out of with certainty.</p>
+    <p style="font-size:14.5px;margin-top:10px">Here's the principle, and it's the most professionally important sentence in this class: <b style="color:var(--ink)">a number that is financially or legally binding must never be generated. It must be retrieved verbatim and printed.</b> That requires you, not the model, to own that branch of the conversation. Which is what a flow builder is for.</p>
+  </div>
+
+  <div class="card" style="border-color:#ff6b8b44">
+    <h4 style="color:var(--rose)">🗞️ Real Case — Air Canada, Again. Now Look At It As Architecture.</h4>
+    <p style="font-size:14.5px">Class 3 gave you this case as a safety story. Here it is again as an <b style="color:var(--ink)">engineering</b> story, because it is the exact failure Kabir just shipped. Air Canada's support chatbot told a grieving customer he could claim a bereavement discount retroactively, up to 90 days after flying. Air Canada's real policy said the opposite — the discount must be approved <i>before</i> travel. The customer booked full fare on the bot's word.</p>
+    <p style="font-size:14.5px;margin-top:10px">Air Canada's defence at the British Columbia Civil Resolution Tribunal is the part worth remembering: they argued the chatbot was <b style="color:var(--ink)">"a separate legal entity" responsible for its own actions.</b> The tribunal rejected that flatly — the airline is responsible for everything on its website, whether it comes from a static page or a bot. Negligent misrepresentation. Roughly <b style="color:var(--ink)">CA$812</b> in damages, interest and fees, and a permanent piece of case law.</p>
+    <p style="font-size:14.5px;margin-top:10px">Now the architectural point. <b style="color:var(--ink)">Air Canada's bot did not need a better prompt. It needed the bereavement-fare policy sitting in a deterministic branch</b> — approved wording, printed verbatim, no model in the path. "You can claim within 90 days" is the same category of error as "most of your money back." One cost CA$812 and a news cycle. The other cost Divya a difficult Thursday morning. <b style="color:var(--ink)">Identical shape. The fix is identical too — and it is a build decision, not a prompting skill.</b></p>
+    <p style="font-size:13px;color:var(--ink3);margin-top:10px">Note the asymmetry that makes this worth your attention professionally: the damages were trivial, and the precedent was not. "The chatbot said it, not us" is not a defence that works anywhere now.</p>
+  </div>
+
+  <div class="defBox"><span class="term">What Is Botpress?</span><p>An <b style="color:var(--ink)">open-source</b> platform for building AI agents on a visual canvas. You work in <b style="color:var(--ink)">Botpress Studio</b>, laying out nodes and cards that define the conversation's path. Its distinctive move: you decide, node by node, where the model gets to improvise and where the bot follows your script exactly. Then you deploy the same bot to many channels — Webchat, Telegram, WhatsApp and more — from one build.</p></div>
+
+  <div class="card">
+    <h4 style="color:var(--orange2)">The four pieces of Botpress you actually need today</h4>
+    <table class="tbl" style="margin-bottom:0"><thead><tr><th>Piece</th><th>What it does</th><th>Where Kabir uses it</th></tr></thead><tbody>
+      <tr><td>Nodes &amp; Cards</td><td>The flow itself. A node is a step; cards inside it are the actions — send a message, capture input, make a choice, call an API.</td><td>The whole enquiry path</td></tr>
+      <tr><td>Autonomous Node</td><td>The LLM-driven node. You write instructions in plain language and it decides what to do and say within those bounds. Its prompt editor has a macro menu for referencing the knowledge base and variables, plus a raw Markdown mode for precise editing.</td><td>Open-ended questions — seasonality, "is it safe," general trip curiosity</td></tr>
+      <tr><td>Knowledge Bases</td><td>Upload documents and URLs for RAG-powered answers. The <i>Query Knowledge Base</i> card works inside the Autonomous Node with no extra configuration.</td><td>Same four Wanderline documents from the Dify build</td></tr>
+      <tr><td>Tables</td><td>Structured data storage the bot reads and writes during a session.</td><td>Capturing lead details — month, party size, phone — as actual rows Divya can sort</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="analogy">
+    <div class="ic">🛣️</div>
+    <div><div class="tt">Why The Split Matters</div>
+    <p>The Autonomous Node is the local driver who knows the city — brilliant on the open road, and you would not let him negotiate the checkpoint. The deterministic branch is the written note you hand over for exactly that checkpoint. <b>A good Botpress bot is mostly open road with a handful of written notes.</b> Kabir doesn't need to script the whole conversation. He needs to script three moments in it.</p></div>
+  </div>
+
+  <div class="card">
+    <h4 style="color:var(--orange2)">Step-by-step demo (share screen)</h4>
+    <p style="font-size:14.5px"><b>Step 1 —</b> Go to <code class="k">botpress.com</code>, sign in, create a new bot. You land in Studio on the canvas.</p>
+    <p style="font-size:14.5px"><b>Step 2 —</b> Open <b style="color:var(--ink)">Knowledge Bases</b> in the left sidebar. Upload the same four Wanderline documents, plus the packages page URL. Point out that you just did the Dify step again in a different tool — the retrieval concept transfers, only the buttons changed.</p>
+    <p style="font-size:14.5px"><b>Step 3 —</b> On the canvas, add an <b style="color:var(--ink)">Autonomous Node</b>. In its instructions, describe the bot's job in plain language and use the macro menu to reference the knowledge base. This is now your open-road default.</p>
+    <p style="font-size:14.5px"><b>Step 4 —</b> Now the important part. Create a separate node called <code class="k">cancellation_policy</code>. Inside it, put a plain <b style="color:var(--ink)">text card containing the refund slab typed out word for word.</b> No LLM anywhere in this node. Route to it on the cancellation intent.</p>
+    <p style="font-size:14.5px"><b>Step 5 —</b> Create a second locked node: <code class="k">human_escalation</code>. One message — "I'm getting someone on this now" — and a handoff. Route anything that smells like distress or a payment dispute here.</p>
+    <p style="font-size:14.5px"><b>Step 6 —</b> Add a <b style="color:var(--ink)">Table</b> to store captured leads. Have the Autonomous Node write travel month, party size and contact into it.</p>
+    <p style="font-size:14.5px"><b>Step 7 —</b> Test in the emulator. Then open <b style="color:var(--ink)">Integrations → Webchat</b>, publish, copy the embed snippet. Then add <b style="color:var(--ink)">Telegram</b>: create a bot via BotFather, paste the token in, publish. <b style="color:var(--ink)">Same brain, two channels, one build.</b></p>
+  </div>
+
+  <div class="say"><span class="who">🎙 Instructor Says — Why Telegram, and not just the website</span>
+    <p>"Ask yourself why Wanderline needs Telegram at all when the customers are on the website. They don't — <b>the guides do.</b> Twenty freelance guides scattered across Ladakh and Spiti, on patchy mobile data, who will never install a company app or log into a portal. They already live in Telegram. So Kabir ships the customer-facing widget to the website and the internal guide helpdesk to Telegram, from the exact same bot."</p>
+    <p>"That's the thing to take from this section, and it's worth more than the button-clicking: <b>one build, many channels, and you meet people where they already are.</b> The moment a bot requires someone to go somewhere new, adoption dies."</p>
+  </div>
+
+  <div class="sim">
+    <h3>🚦 SIM 5 · The Intent Router</h3>
+    <p class="simSub">Six real messages from Wanderline's inbox. Click one — watch which lane it should fire, and see why getting this wrong is expensive.</p>
+    <div class="msgPills" id="routePills"></div>
+    <div class="lanes">
+      <div class="lane auto" id="laneAuto"><div class="lnm">🤖 Autonomous + KB</div><div class="ldesc">Model improvises within bounds, grounded in documents. Open-ended, low-risk.</div></div>
+      <div class="lane det" id="laneDet"><div class="lnm">🔒 Deterministic branch</div><div class="ldesc">Your exact text, printed verbatim. No model involved. Binding facts only.</div></div>
+      <div class="lane esc" id="laneEsc"><div class="lnm">🆘 Human escalation</div><div class="ldesc">Stop being a bot. Hand to a person immediately, with context.</div></div>
+    </div>
+    <div class="outBox" id="routeOut"><span class="lbl">PICK A MESSAGE ABOVE</span>Six real enquiries. Three lanes. The routing decision is the whole job.</div>
+  </div>
+
+  <div class="note beg"><b>Beginner Note:</b> "Intent" just means the thing the person is actually trying to do, regardless of the words they used. "I want to cancel," "how do I get my money back," and "we're not coming anymore" are three phrasings of one intent.</div>
+  <div class="note pro"><b>Intermediate Note:</b> Write your escalation rules <i>before</i> your happy path. It's the discipline that separates a bot you can leave running from one you have to babysit — and the escalation list is always shorter than people expect. Distress, money disputes, anything in-trip, and repeated confusion. That's most of it.</div>
+  <div class="note adv"><b>Advanced Note:</b> Botpress is open-source with self-hosting available. For any client in a regulated space — or one who simply asks "where does our customer data sit" — being able to answer "on your own infrastructure" ends the conversation in your favour. Dify shares this property. Voiceflow does not.</div>
+
+  <div class="card" style="border-color:#ff6b8b44">
+    <h4 style="color:var(--rose)">Botpress Danger — AI Spend Is A Separate Meter</h4>
+    <p style="font-size:14.5px">Botpress bills on two axes and beginners only watch one. There's the <b style="color:var(--ink)">message</b> allowance, and separately there's <b style="color:var(--ink)">AI Spend</b> — the running cost of every LLM-powered action your bot takes. The free Pay-as-you-go plan includes <b style="color:var(--ink)">500 incoming messages a month, 1 collaborator seat, and a $5 monthly AI credit.</b> Burn through the $5 and your AI actions stop until you raise the spend limit, even if you still have messages left. As of the May 2026 pricing update, every plan bundles a proportional AI Spend quota, bots became unlimited, and included storage went up — paid tiers run Plus $89/mo, Team $495/mo, Managed $1,495/mo, then Enterprise. <b style="color:var(--ink)">An Autonomous Node on every turn burns AI Spend on every turn.</b> Deterministic nodes cost nothing to run — which means routing well isn't just safer, it's cheaper.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="q">Quiz 3 · Why should a financially binding answer — a refund percentage, a price, a legal cancellation term — sit in a deterministic branch instead of being generated by an autonomous LLM node?</p>
+    <div class="opt" data-r="w"><span class="ab">A</span>Because LLM nodes respond too slowly for customers to tolerate</div>
+    <div class="opt" data-r="c"><span class="ab">B</span>Because a generated answer is probabilistic — it can be phrased differently or wrongly on any given run, so you can never guarantee the exact figure; a deterministic branch returns the same vetted text every time</div>
+    <div class="opt" data-r="w"><span class="ab">C</span>Because LLM nodes are unable to read from a knowledge base at all</div>
+    <div class="opt" data-r="w"><span class="ab">D</span>Because deterministic branches are the only ones that work on messaging channels</div>
+    <div class="quizWhy"><b>Why B?</b> The knowledge base can hold the correct number and the model can still paraphrase it — "25%" becomes "most of it," "non-refundable after 15 days" becomes "you'd probably still get something back." Generation is probabilistic by design; that's the same property that makes it useful for open questions and unacceptable for binding ones. A deterministic branch prints text you wrote and someone approved, identically every time. A is wrong on the facts, C is wrong (LLM nodes are exactly what query knowledge bases), and D is unrelated to how answers get produced. Bonus: the deterministic branch also costs nothing in model spend.</div>
+  </div>
+  <div class="divider"></div>
+</div></section>
+
+<!-- ============ BREAK ============ -->
+<section class="blk" style="padding:40px 0"><div class="wrap">
+  <div class="card" style="text-align:center;border-color:#ffd16644">
+    <h3 style="color:var(--gold)">☕ Stretch Break — 7 minutes</h3>
+    <p style="font-size:14.5px">Two tools down, one to go. Come back for the one that isn't really about building at all.</p>
+    <p style="font-size:13px;color:var(--ink3);margin-top:8px">[Instructor: leave the Botpress canvas on screen. Take questions from chat during the break — this is where the good ones surface.]</p>
+  </div>
+</div></section>
+
+<!-- ============ SECTION: VOICEFLOW ============ -->
+<section class="blk" id="voiceflow"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 4</span><h2>Tool Demo — Voiceflow</h2><span class="secTime">⏱ 15 min</span></div>
+  <p class="secLede">Right end of the dial — and a genuine change of subject. The first two tools answered "how do I build a bot." Voiceflow answers a different question: <b>how does a team agree on what the bot should say before anyone builds it?</b></p>
+
+  <div class="card" style="border-color:#a48bff44">
+    <h4 style="color:var(--violet)">A Different Problem Entirely — Farah's Twenty Phone Calls</h4>
+    <p style="font-size:14.5px">Every March, Wanderline re-onboards its bench of roughly twenty freelance guides. Farah does it on twenty separate phone calls, and every call covers the same eight things: payment cycle, what to do when a guest cancels mid-trip, insurance, the incident-report process, group-chat rules, and the no-cash-commission policy. Two of those calls run long because a guide misunderstood the commission rule, and one of them turns into an actual problem in September.</p>
+    <p style="font-size:14.5px;margin-top:10px">Now notice three things about this brief that make it <b style="color:var(--ink)">unlike anything we've built today.</b> First: the audience is internal, not customers — this is an HR assistant. Second: the exact wording of the commission policy is a <i>company position</i>, and Farah needs to read and approve every sentence before it goes out. Third, and decisively: <b style="color:var(--ink)">a guide standing at 11,000 feet on Khardung La with one bar of signal is never going to fill in a web form.</b> This has to work as a voice conversation.</p>
+  </div>
+
+  <div class="defBox"><span class="term">What Is Voiceflow?</span><p>A collaborative platform for <b style="color:var(--ink)">designing, prototyping and launching conversational agents</b> — chat and voice. You build on a visual canvas of blocks: messages, choices, conditions, API calls, AI steps, knowledge-base queries. The distinguishing feature isn't the canvas itself; it's that the canvas is a <b style="color:var(--ink)">document a whole team can read.</b> Designers, product managers, CX leads and engineers work on the same artifact, which is why Voiceflow keeps showing up in conversation-designer and voice-interface job descriptions rather than in developer ones.</p></div>
+
+  <table class="tbl"><thead><tr><th>Voiceflow piece</th><th>What it is</th><th>Why a CX team cares</th></tr></thead><tbody>
+    <tr><td>The canvas</td><td>Blocks for messages, choices, conditions, API calls, AI steps — wired into flows</td><td>It's reviewable. A non-engineer can read the conversation and object to a sentence <i>before</i> it's built</td></tr>
+    <tr><td>Knowledge Base</td><td>A first-class primitive. Add documents, URLs or pasted content; Voiceflow handles chunking and embedding — no vector database to run. A <b style="color:var(--ink)">Knowledge Base Query</b> step retrieves chunks and hands them to the model with your instructions. Supports filter operators and optional LLM synthesis.</td><td>Content is <b style="color:var(--ink)">environment-scoped</b> — dev, staging and production each hold their own copy, so you can't accidentally test against live content</td></tr>
+    <tr><td>Prototype / simulator</td><td>Run the conversation in-browser and share a link before shipping anything</td><td>Stakeholders experience it instead of imagining it. This is where most bad copy gets caught</td></tr>
+    <tr><td>API steps &amp; integrations</td><td>Call CRMs, databases, webhooks and business apps — Salesforce, Shopify, Zendesk, Snowflake — straight from the designer. Also supports bi-directional <b style="color:var(--ink)">MCP</b>.<br><span style="color:var(--ink3);font-size:13px">↳ <b style="color:var(--gold)">MCP</b> — Model Context Protocol. A newer standard that lets AI tools talk to other software directly. You don't need it today; I'm naming it only so the term isn't a total blank if you see it in a job posting.</span></td><td>The designed conversation connects to real systems without leaving the design tool</td></tr>
+    <tr><td>Voice as a first-class channel</td><td>Voice isn't an afterthought bolted onto a chatbot here — it's core to the platform's positioning</td><td>Phone-based CX and voice agents are a distinct, well-paid specialism, and this is the tool those roles name</td></tr>
+  </tbody></table>
+
+  <div class="say"><span class="who">🎙 Instructor Says — The Sentence To Remember</span>
+    <p>"Here's the line I want you to walk out with. <b>Dify and Botpress produce a working bot. Voiceflow produces an agreement about what the bot will say — and then produces the bot.</b>"</p>
+    <p>"If you're one person building an FAQ bot for yourself, that agreement is worthless overhead and Voiceflow is the wrong tool. If you're the third person in a chain where a designer writes the copy, a CX lead approves the tone, legal checks the commission wording, and only then does someone build it — that agreement is the entire reason the project doesn't collapse. And that chain is what working at a company looks like."</p>
+  </div>
+
+  <div class="card">
+    <h4 style="color:var(--orange2)">Step-by-step demo (share screen)</h4>
+    <p style="font-size:14.5px"><b>Step 1 —</b> Go to <code class="k">voiceflow.com</code>, sign in, create a new agent. Choose the voice-oriented starting point and name it <i>Wanderline Guide Onboarding</i>.</p>
+    <p style="font-size:14.5px"><b>Step 2 —</b> Open <b style="color:var(--ink)">Knowledge Base</b>. Upload the guide handbook and the commission policy. Note the environment scoping — you're loading this into dev, not production.</p>
+    <p style="font-size:14.5px"><b>Step 3 —</b> On the canvas, lay out the conversation with blocks. Do not rush this — <b style="color:var(--ink)">narrate each block as a decision someone made</b>, not a widget you dragged. That's the whole pedagogical point of this section.</p>
+    <p style="font-size:14.5px"><b>Step 4 —</b> Add a <b style="color:var(--ink)">Knowledge Base Query</b> step for the payment-cycle question, so guides can ask it in their own words.</p>
+    <p style="font-size:14.5px"><b>Step 5 —</b> For the commission policy, use a <b style="color:var(--ink)">plain message block with Farah's approved wording typed in verbatim.</b> Same principle as the Botpress deterministic branch, arrived at from a completely different direction — here it's locked because a human approved that sentence, not just because it's a number.</p>
+    <p style="font-size:14.5px"><b>Step 6 —</b> Hit <b style="color:var(--ink)">Prototype</b>, run it as a voice conversation, then share the prototype link. Say clearly: <i>this link is the deliverable a conversation designer sends for sign-off.</i></p>
+  </div>
+
+  <div class="sim">
+    <h3>🗺 SIM 6 · Walk The Designed Conversation</h3>
+    <p class="simSub">Farah's twenty phone calls, turned into one designed flow. Step through it — each step shows the block, the decision, and who owned that decision.</p>
+    <div class="stepBar" id="vfSteps"></div>
+    <div class="outBox" id="vfOut"></div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn ghost sm" id="vfPrev">← Previous block</button>
+      <button class="btn sm" id="vfNext">Next block →</button>
+    </div>
+  </div>
+
+  <div class="note beg"><b>Beginner Note:</b> "Conversation design" sounds abstract until you see it. It's simply this: deciding in advance what the bot says, in what order, and what happens at every fork — and writing that down where others can read it.</div>
+  <div class="note pro"><b>Intermediate Note:</b> Voiceflow's environment scoping is the most underrated feature in this section. Dev, staging and production each carry their own copy of your content, so testing never touches what live customers see. When a JD asks for "experience shipping conversational agents to production," this is a large part of what they mean.</div>
+  <div class="note adv"><b>Advanced Note:</b> Voiceflow charges by editor seat plus usage credits, and it is the least free-tier-friendly of the three for solo experimentation. It's also the only one of the three you'd expect to find already installed at a company with an actual CX function. Learn it for employability, not for your own side projects.</div>
+
+  <div class="card" style="border-color:#ff6b8b44">
+    <h4 style="color:var(--rose)">Voiceflow Danger — Seats Plus Credits, And A Thin Free Tier</h4>
+    <p style="font-size:14.5px">Voiceflow prices on two axes at once: a <b style="color:var(--ink)">platform fee per editor seat</b>, plus <b style="color:var(--ink)">usage credits</b> consumed every time your agent does something — handling a chat message, taking a voice call, calling a model. Four plans as of May 2026: <b style="color:var(--ink)">Free (Sandbox)</b> — 1,000 credits/month, up to 2 agents, 1 editor seat, 7-day version history; <b style="color:var(--ink)">Pro at $60/editor/month</b>; <b style="color:var(--ink)">Business/Team at $150/editor/month</b>; Enterprise on request. Two traps. <b style="color:var(--ink)">One:</b> credits are not messages — a voice call consumes far more than a text turn, so voice burns the free tier dramatically faster than chat. <b style="color:var(--ink)">Two:</b> the seat fee means a three-person team costs 3× before a single conversation happens. There is no permanently free path to a production business deployment here.</p>
+  </div>
+
+  <div class="quiz">
+    <p class="q">Quiz 4 · What does a conversation-design canvas give a team that a working prototype alone does not?</p>
+    <div class="opt" data-r="w"><span class="ab">A</span>Faster response times once the bot is live in production</div>
+    <div class="opt" data-r="c"><span class="ab">B</span>A shared, readable artifact that non-engineers can review, critique and approve <i>before</i> build effort is spent</div>
+    <div class="opt" data-r="w"><span class="ab">C</span>Automatic translation of the conversation into every language</div>
+    <div class="opt" data-r="w"><span class="ab">D</span>Lower per-message model costs than any other approach</div>
+    <div class="quizWhy"><b>Why B?</b> A prototype shows you what the bot <i>currently does</i>. A design canvas shows the whole intended conversation — every branch, every approved sentence, every fork — in a form a designer, a CX lead or a legal reviewer can read and object to before engineering time is spent. The value is organisational, not technical: it moves disagreement to the cheapest possible moment. A, C and D are all performance or feature claims, and none of them is what a design artifact is for.</div>
+  </div>
+  <div class="divider"></div>
+</div></section>
+
+<!-- ============ SECTION: GUIDED EXERCISE ============ -->
+<section class="blk" id="exercise"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 5</span><h2>Guided Exercise — Same Bot, Three Tools</h2><span class="secTime">⏱ 15 min</span></div>
+  <p class="secLede">Everyone builds the identical bot in all three platforms. Same documents, same three questions. The point is not the bot — it's feeling the difference in your hands.</p>
+
+  <div class="card">
+    <h4 style="color:var(--orange2)">The brief — identical in all three</h4>
+    <p style="font-size:14.5px">A bot that handles exactly three things for Wanderline:</p>
+    <p style="font-size:14.5px;margin-top:8px"><b>1.</b> <i>"What's the best month for Ladakh?"</i> → an open-ended question, answered from the seasonality table.<br><b>2.</b> <i>"What's your cancellation policy?"</i> → a binding answer that must come out word for word, every time.<br><b>3.</b> <i>"Do you help with visas?"</i> → a scope question where the honest answer is partly "no," and saying that clearly matters.</p>
+    <p style="font-size:14.5px;margin-top:10px"><b style="color:var(--ink)">Time-box it: 4 minutes per tool.</b> You will not finish. Finishing isn't the exercise — noticing what each tool made easy and what it made annoying is the exercise.</p>
+  </div>
+
+  <div class="note pro"><b>[Instructor — during the exercise, 12 min]:</b> Do not go silent. (1) Share your screen with all three tabs open and cycle through them every 90 seconds. (2) At the 4-minute mark call "switch to Botpress" out loud. (3) Ask in chat: "which one got you to a first working answer fastest? Type D, B or V." (4) Cold-call two learners on question 2 specifically — how did you guarantee the exact refund wording? (5) At 10 minutes, ask who hit a paywall or credit limit and surface it — that's live material for the wrap-up.</div>
+
+  <div class="sim">
+    <h3>⚖️ SIM 7 · The Three-Way Matrix</h3>
+    <p class="simSub">Eight requirements a client might actually hand you. Click any row — see which tool wins it, and why.</p>
+    <table class="matrixTbl" id="mtx"><thead><tr><th>The requirement</th><th>Best fit</th></tr></thead><tbody></tbody></table>
+    <div class="outBox" id="mtxOut"><span class="lbl">CLICK A REQUIREMENT</span>Eight rows. Not one tool wins all eight — that's the finding.</div>
+  </div>
+
+  <div class="say"><span class="who">🎙 Instructor Says — Read the matrix out loud</span>
+    <p>"Count the winners. Dify takes some rows, Botpress takes some, Voiceflow takes some. <b>No tool sweeps.</b> If you came in hoping I'd tell you which one is best, the honest answer is that the question is malformed — and being able to say that in an interview, with reasons, is worth more than knowing every button in any one of them."</p>
+  </div>
+
+  <div class="quiz">
+    <p class="q">Quiz 5 · You're pitching a small business. You expect roughly <b>900 conversations in month one</b>, averaging <b>6 messages each</b>, and you're the only person building. Three free tiers are on the table: <b>Tool A</b> — 200 message credits <i>total</i>, not monthly. <b>Tool B</b> — 500 incoming messages per month plus a $5 model-usage credit. <b>Tool C</b> — 1,000 interaction credits per month, 2 agents, 1 editor seat. Which constraint bites first?</p>
+    <div class="opt" data-r="w"><span class="ab">A</span>Seat limits — you'll need to add more editors before anything else breaks</div>
+    <div class="opt" data-r="c"><span class="ab">B</span>Message and credit volume — 900 × 6 = 5,400 messages, which blows past all three well inside the first week</div>
+    <div class="opt" data-r="w"><span class="ab">C</span>The agent-count cap — you'd need more than two agents before volume matters</div>
+    <div class="opt" data-r="w"><span class="ab">D</span>None of them — free tiers are sized for exactly this kind of small business</div>
+    <div class="quizWhy"><b>Why B?</b> Do the arithmetic, because this is the arithmetic that saves you in a client meeting. 900 × 6 = <b>5,400 messages in month one</b>. Tool A's 200 <i>lifetime</i> credits are gone in under two days. Tool B's 500/month is gone in about three days — and its $5 model credit may run out even sooner, since every AI-powered turn draws on it. Tool C's 1,000 credits/month cover well under a fifth of the month, and voice turns consume credits faster than text ones. Seats and agent counts never even come into play; volume is roughly 5–27× over every limit. The professional habit here is boring and valuable: <b>multiply expected conversations by messages per conversation before you promise anyone a free build.</b></div>
+  </div>
+  <div class="divider"></div>
+</div></section>
+
+<!-- ============ SECTION: MINI BUILD ============ -->
+<section class="blk" id="build"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 6</span><h2>Mini Build — Ship One Bot For Wanderline</h2><span class="secTime">⏱ 13 min</span></div>
+  <p class="secLede">Main event. Pick one challenge and actually ship it — a live URL or a working Telegram bot by the end of the session.</p>
+
+  <div class="sim">
+    <h3>🎯 SIM 8 · Pick The Right Tool</h3>
+    <p class="simSub">Six client briefs. Choose the platform before you build — that's the real deliverable of this class.</p>
+    <div class="matchScenario" id="pickScenario"><span>BRIEF</span></div>
+    <div class="matchBtns" id="pickBtns"></div>
+    <div class="matchWhy" id="pickWhy"></div>
+    <div class="matchScore" id="pickScore">Score 0 / 6</div>
+  </div>
+
+  <div class="say"><span class="who">🎙 Instructor Says</span>
+    <p>"Documents plus unpredictable questions, and you want it live today → Dify. A binding answer you cannot let a model paraphrase, or you need Telegram and WhatsApp from one build → Botpress. A conversation a team must approve before build, or voice is the channel → Voiceflow. Pick the challenge that matches what you'd actually get paid to do. Go."</p>
+  </div>
+
+  <div class="slackDrop"><div class="av">💬</div><div><span class="nm">Chat Drop — minute 105</span><span class="tm">20 sec</span><p>"Stuck? Drop tool + where you're stuck in chat. I'll unblock live."</p></div></div>
+
+  <div class="chalCard open" id="chalA">
+    <div class="chalHead"><span class="cn">DIFY</span><h4>Challenge A · "The 2 AM Enquiry Desk"</h4><span class="chev">›</span></div>
+    <div class="chalBody">
+      <p class="mission"><b style="color:var(--ink)">Scenario:</b> Wanderline needs something on the website tonight that answers the six repeat questions and captures a lead, so Divya wakes up to warm leads instead of missed ones.</p>
+      <p class="cLabel">Mission</p>
+      <p class="mission">Build and publish a working Dify Chatflow with a linked knowledge base, live at a public URL.</p>
+      <p class="cLabel">Configure</p>
+      <p class="mission"><b>1.</b> Create a <b style="color:var(--ink)">Chatflow</b> app (not the legacy Chatbot type — say why in one line).<br><b>2.</b> Build a knowledge base from at least two documents. Use real ones if you have them; otherwise write a one-page packages sheet and a one-page cancellation policy yourself.<br><b>3.</b> Wire a <b style="color:var(--ink)">Knowledge Retrieval</b> node in before the LLM node.<br><b>4.</b> Paste in a system prompt with all four elements from the demo: retrieval-only, an exact fallback sentence, an escalation rule, and a capture instruction.<br><b>5.</b> Set temperature to <b style="color:var(--ink)">0.2 or lower.</b><br><b>6.</b> Publish and open the public URL.<br><b>7.</b> Now try to break it — ask something deliberately absent from your documents.</p>
+      <p class="cLabel">Success Criteria</p>
+      <p class="mission">A live URL. It answers correctly from your documents, and when asked something outside them it produces <b style="color:var(--ink)">your exact fallback sentence</b> rather than an invention. Screenshot both.</p>
+    </div>
+  </div>
+
+  <div class="chalCard" id="chalB">
+    <div class="chalHead"><span class="cn">BOTPRESS</span><h4>Challenge B · "The Locked Refund Branch + Telegram"</h4><span class="chev">›</span></div>
+    <div class="chalBody">
+      <p class="mission"><b style="color:var(--ink)">Scenario:</b> After the "most of his money back" incident, Farah's instruction is blunt — the refund slab gets quoted exactly, or the bot doesn't discuss refunds. And the guide team lives on Telegram, not the website.</p>
+      <p class="cLabel">Mission</p>
+      <p class="mission">Build a Botpress bot that mixes an Autonomous Node with at least one fully deterministic branch, then deploy it to Telegram.</p>
+      <p class="cLabel">Configure</p>
+      <p class="mission"><b>1.</b> Upload two documents to a <b style="color:var(--ink)">Knowledge Base.</b><br><b>2.</b> Add an <b style="color:var(--ink)">Autonomous Node</b> as your default open-road path, referencing the knowledge base via the macro menu.<br><b>3.</b> Create a <code class="k">cancellation_policy</code> node containing a text card with the refund slab <b style="color:var(--ink)">typed verbatim, no LLM in that node at all.</b> Route the cancellation intent to it.<br><b>4.</b> Create a <code class="k">human_escalation</code> node and route distress and payment-dispute language to it.<br><b>5.</b> Add a <b style="color:var(--ink)">Table</b> and capture at least two lead fields into it.<br><b>6.</b> Publish to <b style="color:var(--ink)">Webchat</b>, then add <b style="color:var(--ink)">Telegram</b> and publish there too.<br><b>7.</b> Message your bot from your own phone.</p>
+      <p class="cLabel">Success Criteria</p>
+      <p class="mission">Ask for the refund policy five times in five different phrasings. <b style="color:var(--ink)">All five replies are byte-identical.</b> If any of them differ, your binding text is still going through the model — find it and lock it. Plus: a screenshot of the bot replying inside Telegram.</p>
+    </div>
+  </div>
+
+  <div class="chalCard" id="chalC">
+    <div class="chalHead"><span class="cn">VOICEFLOW · STRETCH</span><h4>Challenge C · "The Guide Onboarding Agent"</h4><span class="chev">›</span></div>
+    <div class="chalBody">
+      <p class="mission"><b style="color:var(--ink)">Scenario:</b> Farah wants her twenty March phone calls to become one conversation she can approve, sign off, and hand to guides — as voice, because they're on the road.</p>
+      <p class="cLabel">Mission</p>
+      <p class="mission">Design — not just build — a guide-onboarding conversation in Voiceflow, and share a prototype link.</p>
+      <p class="cLabel">Configure</p>
+      <p class="mission"><b>1.</b> Create an agent and upload a one-page guide handbook to the <b style="color:var(--ink)">Knowledge Base.</b><br><b>2.</b> Lay out the conversation on the canvas: a greeting, one choice block that branches on circuit, a <b style="color:var(--ink)">Knowledge Base Query</b> step for open questions, and one <b style="color:var(--ink)">verbatim approved-copy</b> message block for the commission policy.<br><b>3.</b> Add a condition that gives first-season guides an extra branch.<br><b>4.</b> Run it in <b style="color:var(--ink)">Prototype</b> as a voice conversation.<br><b>5.</b> Share the prototype link — that link is your deliverable, exactly as it would be in a real CX role.</p>
+      <p class="cLabel">Success Criteria</p>
+      <p class="mission">A shareable prototype link, plus a two-line note naming <b style="color:var(--ink)">which single sentence in your flow a human must approve before launch, and why.</b> If you can't name one, you've designed a bot with no accountable copy in it — go back and find it.</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+</div></section>
+
+<!-- ============ SECTION: WRAP-UP ============ -->
+<section class="blk" id="wrap"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 7</span><h2>Wrap-Up — The Free-Tier Arithmetic</h2><span class="secTime">⏱ 5 min</span></div>
+  <p class="secLede">One last thing, and it's the thing that separates someone who has played with these tools from someone you'd pay to choose between them.</p>
+
+  <div class="sim">
+    <h3>🧮 SIM 9 · Will The Free Tier Survive?</h3>
+    <p class="simSub">Drag your expected monthly conversations. Assume 6 messages each. Watch which free tier breaks, and when.</p>
+    <div class="dialWrap">
+      <div class="dialEnds"><span>50 conversations/month</span><span>2,000 conversations/month</span></div>
+      <input type="range" id="volDial" min="50" max="2000" value="900" step="50">
+      <div class="dialVal" id="volVal">900 conversations/month · 5,400 messages</div>
+    </div>
+    <div class="calcCards" id="calcCards"></div>
+    <div class="gapCallout" id="calcGap"></div>
+    <p style="font-size:12px;color:var(--ink3);margin-top:12px">Modelled on July 2026 published free tiers. Credits are treated as roughly one per interaction for teaching purposes — real credit consumption varies by action, and voice consumes substantially more than text. Verify current limits before quoting them to a client.</p>
+  </div>
+
+  <div class="svgWrap">
+    <svg viewBox="0 0 660 420" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--sans)">
+      <line x1="70" y1="30" x2="70" y2="370" stroke="var(--line)" stroke-width="1.5"/>
+      <line x1="70" y1="370" x2="610" y2="370" stroke="var(--line)" stroke-width="1.5"/>
+      <text x="70" y="20" text-anchor="middle" fill="var(--ink3)" font-size="10.5" font-family="var(--mono)">TEAM REVIEWS IT</text>
+      <text x="70" y="392" text-anchor="middle" fill="var(--ink3)" font-size="10.5" font-family="var(--mono)">YOU SHIP IT ALONE</text>
+      <text x="340" y="410" text-anchor="middle" fill="var(--ink3)" font-size="10.5" font-family="var(--mono)">MODEL DECIDES  →  YOU DECIDE</text>
+
+      <circle cx="180" cy="290" r="10" fill="var(--teal)"/>
+      <text x="180" y="270" text-anchor="middle" fill="var(--ink)" font-size="12.5" font-weight="700">Dify</text>
+      <text x="180" y="312" text-anchor="middle" fill="var(--ink3)" font-size="10">documents in, answers out</text>
+      <text x="180" y="326" text-anchor="middle" fill="var(--ink3)" font-size="10">open-source · self-hostable</text>
+
+      <circle cx="390" cy="210" r="10" fill="var(--gold)"/>
+      <text x="390" y="190" text-anchor="middle" fill="var(--ink)" font-size="12.5" font-weight="700">Botpress</text>
+      <text x="390" y="232" text-anchor="middle" fill="var(--ink3)" font-size="10">flow + autonomous node</text>
+      <text x="390" y="246" text-anchor="middle" fill="var(--ink3)" font-size="10">open-source · many channels</text>
+
+      <circle cx="520" cy="90" r="10" fill="var(--rose)"/>
+      <text x="520" y="70" text-anchor="middle" fill="var(--ink)" font-size="12.5" font-weight="700">Voiceflow</text>
+      <text x="520" y="112" text-anchor="middle" fill="var(--ink3)" font-size="10">designed, approved, then built</text>
+      <text x="520" y="126" text-anchor="middle" fill="var(--ink3)" font-size="10">voice-first · seats + credits</text>
+
+      <path d="M180,290 Q290,250 390,210" stroke="var(--line)" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+      <path d="M390,210 Q470,150 520,90" stroke="var(--line)" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    </svg>
+    <div class="svgCap">THREE TOOLS, TWO AXES · WHO DECIDES THE TURN vs WHO SIGNS OFF THE COPY</div>
+  </div>
+
+  <table class="tbl"><thead><tr><th>Skill</th><th>What You Can Do Now</th></tr></thead><tbody>
+    <tr><td>The control dial</td><td>Ask "who decides what happens next" and place any bot brief on the right platform in under a minute</td></tr>
+    <tr><td>Dify</td><td>Build and publish a Chatflow with a linked knowledge base, a retrieval-only system prompt, and a low temperature</td></tr>
+    <tr><td>Botpress</td><td>Mix an Autonomous Node with locked deterministic branches, capture leads into Tables, and ship to Webchat + Telegram from one build</td></tr>
+    <tr><td>Voiceflow</td><td>Design a reviewable conversation with a Knowledge Base Query step and verbatim approved copy, and share a prototype for sign-off</td></tr>
+    <tr><td>Binding-answer discipline</td><td>Recognise which answers must never be generated, and lock them</td></tr>
+    <tr><td>Free-tier arithmetic</td><td>Multiply conversations × messages and know which limit breaks before you promise a client anything</td></tr>
+  </tbody></table>
+
+  <div class="card">
+    <h4 style="color:var(--orange)">Key Takeaways</h4>
+    <ol style="padding-left:20px;margin-top:8px;color:var(--ink2);font-size:14.5px;line-height:1.95">
+      <li><b style="color:var(--ink)">The answer was never the problem — latency was.</b> Six classes taught you to produce a good answer. A bot's job is to deliver one at 2:12 AM without you.</li>
+      <li><b style="color:var(--ink)">One question sorts all three tools:</b> who decides what happens next, the model or you?</li>
+      <li><b style="color:var(--gold)">Docs, Detours, Design.</b> Dify = documents in, answers out. Botpress = planned branches around the risky bits. Voiceflow = approved before it's built. If you remember nothing else from today, remember three words.</li>
+      <li><b style="color:var(--ink)">Dify</b> — documents plus instructions, live fastest, open-source and self-hostable. Build it as a <i>Chatflow</i>; Chatbot, Agent and Text Generator are legacy interfaces on the same engine.</li>
+      <li><b style="color:var(--ink)">Botpress</b> — Autonomous Node for the open road, locked deterministic branches for the checkpoints, one build to many channels. Also open-source and self-hostable.</li>
+      <li><b style="color:var(--ink)">Voiceflow</b> — produces an <i>agreement</i> before it produces a bot. Voice-first, CX-team-shaped, and the tool named in conversation-designer JDs.</li>
+      <li><b style="color:var(--ink)">Never let a model generate a binding number.</b> Retrieve it verbatim and print it. "25%" becoming "most of it" is how a bot creates a legal problem.</li>
+      <li><b style="color:var(--ink)">A bot's most valuable skill is knowing when to stop being a bot.</b> Write your escalation rules before your happy path.</li>
+      <li><b style="color:var(--ink)">Do the arithmetic.</b> Conversations × messages, against the actual published limit. Every free tier here dies at a specific, calculable number.</li>
+    </ol>
+  </div>
+
+  <div class="card" style="border-color:#5fe08a44">
+    <h4 style="color:var(--green)">Wanderline — Sunday, 2:14 AM</h4>
+    <p style="font-size:14.5px">A traveller in Toronto opens Wanderline's site and asks about Ladakh in September. She gets an answer in four seconds, from the seasonality table, with the road-closure caveat included. She asks about cancellation. The bot prints the slab word for word — 30+ days, 15–29 days, under 15 days — because that branch has no model in it. She leaves her name, her travel month, and her number.</p>
+    <p style="font-size:14.5px;margin-top:10px">Divya opens her laptop at 8:40 AM to a row in a table instead of a missed conversation. <b style="color:var(--ink)">Farah didn't hire anyone. Kabir didn't write any code. Nobody was awake at 2:14 AM.</b></p>
+    <p style="font-size:13.5px;margin-top:10px;color:var(--ink3)">Then, at 11 AM, a different traveller asks: <i>"Is September 14th actually available, and what's the price for four adults?"</i> — and the bot cannot answer, because that isn't in any document. It's in Wanderline's booking sheet, changing hourly. <b style="color:var(--orange2)">That's Class 8.</b></p>
+  </div>
+
+  <p class="bigQuote">"Anyone can build a bot in an afternoon now. <em>Knowing which one to build — and which sentence in it a human must own — is the job.</em>"</p>
+
+  <div class="say"><span class="who">🎙 Instructor Says — Closing</span>
+    <p>"You built the same bot three times today, and if it felt repetitive, sit with that feeling — because it's the lesson. The building was almost identical. What differed was <b>who was allowed to decide, what had to be exact, and who had to sign it off.</b> Those three questions are what a client is actually paying you to answer. In 2026, the platform is a commodity. The judgment isn't."</p>
+    <p>"Three words on your way out — say them with me. <b>Docs. Detours. Design.</b> Six months from now you'll have forgotten which menu the temperature slider was under, and that's genuinely fine. If a client describes a problem and the right one of those three words comes to mind before they finish the sentence, this class did its job."</p>
+    <p>"Next class, the bot stops talking and starts <i>doing</i> — and everything we built today turns out to be about half of what Wanderline needs."</p>
+  </div>
+
+</div></section>
+
+<div class="footer"><div class="wrap">
+  <p>Scaler AIML · Class 7 — Building No-Code AI Chatbots: Dify, Botpress &amp; Voiceflow · Wanderline Edition</p>
+  <p style="margin-top:6px">Platform details verified July 2026 · Dify v1.16.1 (v2.0 beta) · Botpress post-May-2026 pricing · Voiceflow four-plan structure · re-verify before teaching</p>
+</div></div>
+
+<script>
+/* progress bar + hero counters */
+addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressBar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+document.querySelectorAll('.hstat .n').forEach(el=>{const t=+el.dataset.count;let c=0;const step=()=>{c+=Math.max(1,Math.round(t/30));if(c>=t)c=t;el.textContent=c;if(c<t)requestAnimationFrame(step)};setTimeout(step,300)});
+
+/* quizzes */
+document.querySelectorAll('.quiz').forEach(q=>{const opts=q.querySelectorAll('.opt');
+ opts.forEach(o=>o.addEventListener('click',()=>{opts.forEach(x=>{x.classList.add('locked');if(x.dataset.r==='c')x.classList.add('correct')});
+  if(o.dataset.r!=='c')o.classList.add('wrong');q.querySelector('.quizWhy').classList.add('show');}));});
+
+/* challenge accordion cards */
+document.querySelectorAll('.chalHead').forEach(h=>h.addEventListener('click',()=>h.closest('.chalCard').classList.toggle('open')));
+
+/* ===== SIM 1: The Four-Inbox Week ===== */
+(()=>{
+const out=document.getElementById('inboxOut'),gap=document.getElementById('inboxGap');
+const msg=(t,who,body,cls)=>'<div class="inboxMsg '+(cls||'')+'"><div class="im"><span>'+who+'</span><span>'+t+'</span></div>'+body+'</div>';
+const DATA={
+ ig:{out:'<span class="lbl">INSTAGRAM DM · 118 ENQUIRIES THAT WEEK</span>'
+   +msg('1:47 AM','@travelwithmeera','"hey is september good for ladakh or too cold?"','rep')
+   +msg('2:12 AM','@rohan_k','"do u help with visa"','rep')
+   +msg('3:04 AM','@thefernandeses','"cost for 2 people ladakh 6 days?"','rep')
+   +msg('11:20 PM','@aditi.travels','"is it safe for solo women travellers"','rep')
+   +'<p style="font-size:12px;color:var(--gold);margin-top:10px">4 of 4 shown are repeat questions. First reply went out at 10:15 AM.</p>',
+  gap:'<b>The busiest channel, and the worst latency.</b> Instagram is where discovery happens, which means it is where night-owl and overseas travellers land. Every one of these four is answerable from a document Farah already has on her laptop.'},
+ wa:{out:'<span class="lbl">WHATSAPP · 96 ENQUIRIES THAT WEEK</span>'
+   +msg('7:02 AM','+91 98••• •••41','"Good morning, what is your cancellation policy?"','rep')
+   +msg('9:40 AM','+91 99••• •••18','"Do you have EMI option?"','rep')
+   +msg('1:15 PM','+44 7•• ••• 226','"We are 6 adults for Spiti in September. Can you send a quote today?"','money')
+   +msg('8:55 PM','+91 70••• •••03','"Any discount for group of 4?"','rep')
+   +'<p style="font-size:12px;color:var(--rose);margin-top:10px">The 1:15 PM message is a real booking. It sat unanswered for 5 hours behind the repeat questions.</p>',
+  gap:'<b>This is the actual cost of repeat questions.</b> They do not just waste Divya\'s time — they <i>queue in front of</i> the enquiries worth money. The party of six booked elsewhere.'},
+ form:{out:'<span class="lbl">WEBSITE FORM · 61 ENQUIRIES THAT WEEK</span>'
+   +msg('4:30 AM','form submission','Name: J. Mehta · "Best time for Kerala backwaters? And do you arrange the permits for Ladakh separately?"','rep')
+   +msg('12:10 PM','form submission','Name: S. Iyer · "Cancellation terms please"','rep')
+   +msg('6:45 PM','form submission','Name: (blank) · "price?"','rep')
+   +'<p style="font-size:12px;color:var(--ink3);margin-top:10px">Form submissions land in Gmail and get read once a day, in the evening.</p>',
+  gap:'<b>The channel with the highest intent and the slowest response.</b> Somebody filling in a form has already decided they are interested. Wanderline replies to them last.'},
+ mail:{out:'<span class="lbl">GMAIL · 37 ENQUIRIES THAT WEEK</span>'
+   +msg('Mon 2:20 AM','h.kaur@••••.ca','"Planning Ladakh for my parents (62 and 66). Altitude concerns? Also refund terms if we cancel."','rep')
+   +msg('Wed 11:50 PM','corporate@••••.in','"Offsite for 40 people, Rajasthan, November. Need a proposal by Friday."','money')
+   +msg('Fri 6:10 AM','tomas.•••@••••.de','"Is inner line permit included in the package price?"','rep')
+   +'<p style="font-size:12px;color:var(--rose);margin-top:10px">The 40-person corporate offsite was answered on Monday. The deadline was Friday.</p>',
+  gap:'<b>The smallest channel by volume, the largest by deal size.</b> A 40-person offsite is worth more than a month of individual bookings. It lost to an inbox sorted by nothing at all.'}
+};
+const setI=i=>{
+  document.querySelectorAll('#inboxToggle button').forEach(b=>b.classList.toggle('on',b.dataset.i===i));
+  out.innerHTML=DATA[i].out;gap.innerHTML=DATA[i].gap;
+};
+document.querySelectorAll('#inboxToggle button').forEach(b=>b.onclick=()=>setI(b.dataset.i));
+setI('ig');
+})();
+
+/* ===== SIM 2: The Control Dial ===== */
+(()=>{
+const dial=document.getElementById('ctrlDial'),val=document.getElementById('ctrlVal'),out=document.getElementById('ctrlOut');
+const ZONES=[
+ {max:20,nm:'Model decides almost everything',tool:'DIFY territory',col:'var(--teal)',
+  gain:'Live in under an hour. Handles questions you never anticipated. One system prompt is your whole design.',
+  lose:'You cannot guarantee wording. It will paraphrase — including numbers you needed exact.',
+  ex:'A traveller asks something oddly phrased that nobody thought of. It answers well, from your documents.',
+  risk:'It also answers the refund question well — but in its own words, differently each time.'},
+ {max:45,nm:'Mostly model, a few locked branches',tool:'DIFY or BOTPRESS · the common professional pattern',col:'var(--teal)',
+  gain:'Flexibility everywhere it is safe, guarantees exactly where it is not. This is where most real production bots sit.',
+  lose:'You have to have identified which answers are binding. That is a judgment call, not a setting.',
+  ex:'Open questions go to the model. Refunds, prices and legal terms hit hard-coded text.',
+  risk:'If you miss one binding answer, it silently stays on the model path until a customer screenshots it.'},
+ {max:70,nm:'You own the path, model fills the gaps',tool:'BOTPRESS territory',col:'var(--gold)',
+  gain:'A visible, auditable route through the conversation. You can point at a node and say "this is why it said that."',
+  lose:'Real build time. Every branch you did not anticipate is a dead end for the user.',
+  ex:'Named intents route to named nodes. The Autonomous Node handles only what you left open.',
+  risk:'Anticipation debt. People phrase things in ways you did not plan for, and the flow has nowhere to send them.'},
+ {max:100,nm:'You decide every single step',tool:'VOICEFLOW territory · designed and approved',col:'var(--rose)',
+  gain:'Every sentence is written, reviewed and owned by a named human. Perfect for voice, regulated copy, and team sign-off.',
+  lose:'Slowest to build, and brittle if people go off-script. Massive overkill for six FAQs.',
+  ex:'A designed voice conversation where legal approved the commission wording before build began.',
+  risk:'Rigidity. Anything outside the designed path needs a human, or it fails.'}
+];
+const render=()=>{
+  const v=+dial.value;const z=ZONES.find(z=>v<=z.max);
+  val.textContent='Control level — '+v+'%';
+  out.innerHTML='<span class="lbl" style="color:'+z.col+'">'+z.tool+'</span>'
+   +'<h5 style="color:'+z.col+'">'+z.nm+'</h5>'
+   +'<div class="sec">✅ What you gain</div><p style="font-size:13.5px">'+z.gain+'</p>'
+   +'<div class="sec" style="color:var(--rose)">⚠️ What you give up</div><p style="font-size:13.5px">'+z.lose+'</p>'
+   +'<div class="sec">📍 What it looks like in practice</div><p style="font-size:13.5px">'+z.ex+'</p>'
+   +'<div class="metaBox" style="border-color:#ffd16644;color:var(--gold)">FAILURE MODE AT THIS SETTING · '+z.risk+'</div>';
+};
+dial.addEventListener('input',render);render();
+})();
+
+/* ===== SIM 3: Temperature Dial ===== */
+(()=>{
+const dial=document.getElementById('tempDial'),val=document.getElementById('tempVal'),out=document.getElementById('tempOut'),gap=document.getElementById('tempGap');
+const T={
+ 0:{a:'"For a cancellation 15–29 days before departure, the refund is 50% of the package value. Under 15 days, the refund is 25%. Your trip is 20 days away, so 50% applies. Would you like me to have Divya confirm this on your booking?"',
+    c:'var(--green)',n:'Identical wording every single run. Reads the slab, applies it, states it plainly.',
+    g:'<b>0.0 — fully deterministic output.</b> The same input produces the same words, run after run. Slightly stiff to read. For factual, policy-bearing answers, stiff is a feature.'},
+ 20:{a:'"Since your Spiti trip is 20 days out, you fall in the 15–29 day band — that\'s a 50% refund of the package value. Want me to have Divya confirm against your actual booking?"',
+    c:'var(--green)',n:'Natural, warm, and the number is still exactly right. Phrasing may vary a little between runs.',
+    g:'<b>0.2 — the recommended setting for a knowledge-grounded bot.</b> Enough variation to sound human, tight enough that the figure stays correct. This is where you leave it.'},
+ 40:{a:'"You\'re 20 days out, which puts you in the 15–29 day window — so you\'d be looking at around 50% back. Let me get Divya to double-check the exact amount on your booking."',
+    c:'var(--gold)',n:'Watch the word "around." It just softened a precise figure into an approximation.',
+    g:'<b>0.4 — drift begins, and it begins with hedging words.</b> "Around 50%" is not 50%. Nothing is technically wrong yet, but the bot has started editorialising a number it was given exactly.'},
+ 60:{a:'"20 days out should be fine — you\'d typically get about half back, sometimes more depending on how the operator handles it. Divya can sort out the details with you."',
+    c:'var(--rose)',n:'"Typically." "Sometimes more." "Depending." None of this is in the policy document.',
+    g:'<b>0.6 — invention.</b> "Sometimes more depending on how the operator handles it" is fabricated. It sounds plausible and reassuring, which is precisely what makes it dangerous — the customer now believes a term that does not exist.'},
+ 80:{a:'"Don\'t worry too much — 20 days is still a comfortable window, so most of your money should come back to you. Cancellation policies are usually pretty flexible at this stage. Shall I ask Divya to process it?"',
+    c:'var(--red)',n:'This is the exact answer that got Wanderline in trouble. "Most of your money." "Usually pretty flexible."',
+    g:'<b>0.8 — the Mr. Raghavan answer.</b> Confident, kind, and wrong. Note that the knowledge base contained the correct slab the entire time. High temperature did not fail to retrieve it — it retrieved it and then talked over it.'},
+ 100:{a:'"Great news, 20 days out is well within the flexible period! You should be looking at a full or near-full refund, and we\'re usually happy to hold the amount as credit for a future trip too. Let me get that started for you!"',
+    c:'var(--red)',n:'A full refund and a credit-hold policy. Neither exists. The bot has invented company policy.',
+    g:'<b>1.0 — fully unusable for anything factual.</b> It has now promised a refund tier and a credit scheme Wanderline does not offer. This is not a prompt problem. It is a settings problem, and it takes one dropdown to fix.'}
+};
+const render=()=>{
+  const v=+dial.value,d=T[v];
+  val.textContent='Temperature — '+(v/100).toFixed(1);
+  out.innerHTML='<span class="lbl" style="color:'+d.c+'">BOT REPLIES</span><p style="font-size:14px;color:var(--ink)">'+d.a+'</p>'
+   +'<p style="font-size:12.5px;color:'+d.c+';margin-top:10px">'+d.n+'</p>';
+  gap.innerHTML=d.g;
+};
+dial.addEventListener('input',render);render();
+})();
+
+/* ===== SIM 4: Knowledge Base Unlinked vs Linked ===== */
+(()=>{
+const out=document.getElementById('kbOut'),gap=document.getElementById('kbGap');
+const off={out:'<span class="lbl" style="color:var(--rose)">TRAVELLER: "What\'s your cancellation policy for the Spiti trip?"</span>'
+  +'<p style="font-size:14px;color:var(--ink)">"Most travel operators offer a full refund up to 30 days before departure, a partial refund between 15 and 30 days, and typically no refund within 14 days. I\'d recommend checking your booking confirmation for Wanderline\'s specific terms."</p>'
+  +'<p style="font-size:12.5px;color:var(--rose);margin-top:10px">Fluent. Well-structured. Completely made up. Notice it says "most travel operators" — the model is describing the <i>industry average it absorbed during training</i>, not Wanderline\'s policy, which it has never seen.</p>',
+ gap:'<b>This is the failure that looks like success.</b> Nothing here is flagged, nothing is hedged badly, and a traveller has no way to tell. The bot is a general-purpose model with a nice system prompt and <i>no access to a single Wanderline document.</i>'};
+const on={out:'<span class="lbl">TRAVELLER: "What\'s your cancellation policy for the Spiti trip?"</span>'
+  +'<p style="font-size:14px;color:var(--ink)">"For Spiti, cancellations 30 or more days before departure get an 80% refund. Between 15 and 29 days it\'s 50%. Under 15 days, 25%. The permit fee is non-refundable in all cases. When is your departure date?"</p>'
+  +'<div class="metaBox">RETRIEVED CHUNK · source: wanderline_cancellation_policy.pdf · chunk 2 of 7<br>"Spiti Valley 7D/6N — 30+ days: 80% refund. 15–29 days: 50% refund. &lt;15 days: 25% refund. Inner-line permit fee non-refundable in all cases."</div>'
+  +'<p style="font-size:12.5px;color:var(--green);margin-top:10px">Grounded in an actual document, with the retrieved chunk visible in the logs. Also caught the permit-fee exception, which the invented answer missed entirely.</p>',
+ gap:'<b>One node, wired in.</b> Same model, same prompt, same temperature — the only change is a Knowledge Retrieval node feeding real text into the LLM node. This is Class 5\'s RAG, now as a button instead of a concept. And note the follow-up question: the prompt\'s capture instruction is doing its job.'};
+const setK=k=>{
+  document.querySelectorAll('#kbToggle button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  const d=k==='off'?off:on;out.innerHTML=d.out;gap.innerHTML=d.gap;
+};
+document.querySelectorAll('#kbToggle button').forEach(b=>b.onclick=()=>setK(b.dataset.k));
+setK('off');
+})();
+
+/* ===== SIM 5: The Intent Router ===== */
+(()=>{
+const pills=document.getElementById('routePills'),out=document.getElementById('routeOut');
+const MSGS=[
+ {t:'"is september good for ladakh or too cold?"',lane:'auto',
+  reply:'"September is one of the better months for Ladakh — clear skies, and the roads are usually still open before the October closures. Nights get cold, around 2–5°C. Which route were you thinking of?"',
+  why:'<b>Open-ended, low-risk, answerable from the seasonality table.</b> Nobody gets hurt if the phrasing varies between runs. Let the model handle it, grounded in the knowledge base. This is the majority of traffic and it belongs here.',
+  cost:'Costs AI Spend on every turn — but it is the right cost.'},
+ {t:'"I want to cancel my Spiti booking, how much do I get back?"',lane:'det',
+  reply:'[verbatim from the locked node] "Spiti cancellation terms: 30+ days before departure — 80% refund. 15–29 days — 50%. Under 15 days — 25%. The inner-line permit fee is non-refundable in all cases. Divya will confirm against your booking date."',
+  why:'<b>A binding financial figure. This must never be generated.</b> Route the cancellation intent to a node containing text you typed and Farah approved. No LLM in that node at all — which means the wording is byte-identical on every single run, forever.',
+  cost:'Costs nothing in AI Spend. Deterministic nodes are free to run.'},
+ {t:'"my flight to Leh got cancelled, I\'m stuck at Delhi airport with my kids"',lane:'esc',
+  reply:'"I\'m getting someone on this right now — hold on." [handoff fires, with full transcript attached, and pings the on-call number]',
+  why:'<b>Distress, in-trip, time-critical. The bot\'s only correct move is to stop being a bot.</b> Do not let it attempt rebooking advice, do not let it reassure. Escalate immediately, and pass the transcript so the human does not start from zero. This single branch is what makes a bot safe to leave running overnight.',
+  cost:'The most valuable branch in the build, and among the cheapest.'},
+ {t:'"do u help with visa"',lane:'auto',
+  reply:'"We handle inner-line permits for Ladakh and Spiti as part of the package. We don\'t process international visas — we can share a document checklist, but the application is yours to file. Which country\'s passport are you travelling on?"',
+  why:'<b>A scope question, and the honest answer is partly "no."</b> The model can handle this well <i>provided</i> the Visa &amp; Permits FAQ is in the knowledge base and the system prompt forbids going beyond it. Note what the good answer does: it separates what Wanderline does from what it does not, instead of blurring both into a vague yes.',
+  cost:'Standard autonomous turn.'},
+ {t:'"I paid ₹42,000 yesterday and there\'s no confirmation anywhere"',lane:'esc',
+  reply:'"I\'m getting a human onto this immediately." [handoff, flagged as payment issue, priority]',
+  why:'<b>A payment dispute is never a bot conversation.</b> Even if the bot could look up the transaction, the customer is anxious about money and needs a person. Escalate on any mention of a paid amount plus a problem. The pattern to watch for is money + something missing.',
+  cost:'Trivial. The alternative — a bot mishandling this — is expensive.'},
+ {t:'"hi"',lane:'auto',
+  reply:'"Hi! I can help with trip details, best months to travel, permits and cancellation terms. What are you planning?"',
+  why:'<b>Low-stakes, and worth designing anyway.</b> A greeting is your one chance to set expectations about what the bot can and cannot do. Notice this reply <i>lists its own scope</i> — that single habit prevents a large share of downstream frustration, because people stop asking for things it was never going to do.',
+  cost:'Standard autonomous turn.'}
+];
+const LANES={auto:'laneAuto',det:'laneDet',esc:'laneEsc'};
+const NAMES={auto:'🤖 AUTONOMOUS + KNOWLEDGE BASE',det:'🔒 DETERMINISTIC BRANCH',esc:'🆘 HUMAN ESCALATION'};
+const COLS={auto:'var(--teal)',det:'var(--gold)',esc:'var(--rose)'};
+MSGS.forEach((m,i)=>{
+  const b=document.createElement('button');b.className='msgPill';b.textContent=m.t;
+  b.onclick=()=>{
+    document.querySelectorAll('#routePills .msgPill').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
+    Object.values(LANES).forEach(id=>document.getElementById(id).classList.remove('hot'));
+    document.getElementById(LANES[m.lane]).classList.add('hot');
+    out.innerHTML='<span class="lbl" style="color:'+COLS[m.lane]+'">ROUTED TO · '+NAMES[m.lane]+'</span>'
+      +'<p style="font-size:13.5px;color:var(--ink)">'+m.reply+'</p>'
+      +'<div class="sec">Why this lane</div><p style="font-size:13.5px">'+m.why+'</p>'
+      +'<div class="metaBox">💰 '+m.cost+'</div>';
+  };
+  pills.appendChild(b);
+});
+})();
+
+/* ===== SIM 6: Walk The Designed Conversation ===== */
+(()=>{
+const bar=document.getElementById('vfSteps'),out=document.getElementById('vfOut');
+const STEPS=[
+ {blk:'Start · Voice channel',own:'Farah (founder)',
+  says:'"Hi, this is the Wanderline guide desk. This\'ll take about four minutes."',
+  dec:'The channel decision came first, and it drove everything else. Guides are on the road with patchy data, so this is a <b>voice</b> conversation, not a form. That single choice rules out long lists, rules out typing anything, and means every prompt has to be short enough to hold in your head while you listen.',
+  note:'Design principle: choose the channel before you design a single line. Voice and chat are not the same conversation with different skins.'},
+ {blk:'Choice block · Which circuit',own:'Farah (founder)',
+  says:'"Which circuit are you guiding this season — Ladakh, Spiti, Rajasthan, or Kerala?"',
+  dec:'A <b>choice block</b>, not an open question, because the answer branches everything downstream — payment cycle, altitude protocol and insurance all differ by circuit. Four options, spoken, is the maximum a person can hold on a phone call.',
+  note:'Sets a variable used by three later blocks. On voice, four options is the ceiling — beyond that people forget the first one.'},
+ {blk:'Knowledge Base Query · Payment cycle',own:'Kabir (built it)',
+  says:'"Payments go out on the 7th of the month following the trip, to the account on your onboarding form. Ask me anything else about payment."',
+  dec:'This one is <b>open to the model</b>, grounded in the guide handbook, because guides ask it fifteen different ways — "when do I get paid," "what date does money come," "is it after the trip or during." Anticipating every phrasing would be a waste of effort. The knowledge base handles it.',
+  note:'Filter operators scope the retrieval to the handbook only. Wrong lane for a binding figure — right lane for a factual one people phrase freely.'},
+ {blk:'Message block · VERBATIM APPROVED COPY',own:'Farah — and only Farah',
+  says:'"Guides may not accept cash payments or tips from guests as commission under any circumstances. All guest payments go through Wanderline. Breaching this ends the engagement."',
+  dec:'<b>This is the block the whole flow exists for.</b> It is a plain message block with wording Farah wrote and approved, typed in verbatim. No knowledge base, no model, no paraphrasing. Two guides misunderstood this rule on last year\'s phone calls, and one of those misunderstandings became a real problem in September.',
+  note:'Same principle as the Botpress deterministic branch — arrived at from a completely different direction. Here it is locked because a human is accountable for the sentence, not because it contains a number.'},
+ {blk:'Condition · First season?',own:'Farah + Kabir',
+  says:'"Since this is your first season with us, I\'ll walk you through insurance and the incident-report process too."',
+  dec:'A <b>condition block</b> splitting returning guides from new ones. Returning guides skip four minutes of material they already know — and that respect is why they actually complete the call instead of hanging up halfway.',
+  note:'The most common design failure in onboarding flows is making experienced people sit through beginner content. One condition block fixes it.'},
+ {blk:'Capture + Table write + Handoff',own:'Kabir (built it)',
+  says:'"Got it — I\'ve logged your circuit and confirmed you\'ve heard the commission policy. Anything I couldn\'t answer, I\'m sending to Farah now."',
+  dec:'Writes to a table so Farah has an auditable record of <b>who confirmed hearing the commission policy and when</b> — which is the actual business reason this flow was worth building. Anything unresolved routes to a human rather than being dropped.',
+  note:'The deliverable was never "a bot." It was twenty phone calls Farah stops making, plus a record that the policy was communicated.'}
+];
+let i=0;
+const render=()=>{
+  bar.innerHTML='';
+  STEPS.forEach((s,k)=>{
+    const d=document.createElement('button');d.className='stepDot'+(k===i?' on':(k<i?' done':''));d.textContent=k+1;
+    d.onclick=()=>{i=k;render()};bar.appendChild(d);
+  });
+  const s=STEPS[i];
+  out.innerHTML='<span class="blockTag">BLOCK '+(i+1)+' OF '+STEPS.length+' · '+s.blk+'</span>'
+   +'<p style="font-size:14px;color:var(--ink);font-style:italic">'+s.says+'</p>'
+   +'<div class="sec">The design decision</div><p style="font-size:13.5px">'+s.dec+'</p>'
+   +'<div class="metaBox" style="border-color:#a48bff44;color:var(--violet)">OWNED BY · '+s.own+'</div>'
+   +'<p style="font-size:12.5px;color:var(--ink3);margin-top:10px">'+s.note+'</p>';
+};
+document.getElementById('vfNext').onclick=()=>{i=(i+1)%STEPS.length;render()};
+document.getElementById('vfPrev').onclick=()=>{i=(i-1+STEPS.length)%STEPS.length;render()};
+render();
+})();
+
+/* ===== SIM 7: The Three-Way Matrix ===== */
+(()=>{
+const tb=document.querySelector('#mtx tbody'),out=document.getElementById('mtxOut');
+const ROWS=[
+ {r:'Answer unpredictable questions from 40 uploaded package PDFs',w:'Dify',col:'var(--teal)',
+  why:'A pure retrieval problem — lots of documents, questions you cannot anticipate, no exact-wording requirement. Dify is built for precisely this and gets you live fastest. Botpress can do it too; Dify does it with less setup.'},
+ {r:'Never mis-state a refund percentage, not once',w:'Botpress',col:'var(--gold)',
+  why:'You need a deterministic branch printing approved text with no model in the path. Botpress makes mixing that with an otherwise LLM-driven bot natural. Voiceflow can also lock copy — Botpress is the cheaper, faster route to just this.'},
+ {r:'A design and marketing team must approve the copy before build',w:'Voiceflow',col:'var(--rose)',
+  why:'This is an organisational requirement, not a technical one. Voiceflow produces a canvas non-engineers can read, critique and sign off, plus a shareable prototype. Neither of the others is built to be reviewed by people who will never open the builder.'},
+ {r:'Ship to Telegram and WhatsApp for a field team, today',w:'Botpress',col:'var(--gold)',
+  why:'Multi-channel deployment from one build is core Botpress. Same knowledge base, same policies, same autonomous node serving webchat and Telegram — one brain, not one bot per channel.'},
+ {r:'Self-host on the client\'s own server, no vendor lock-in',w:'Dify or Botpress',col:'var(--ink2)',
+  why:'Both are open-source with self-hosting available. This is a genuine two-way tie, and it is often the requirement that decides a real deal — the moment a client asks where customer data sits, Voiceflow is out.'},
+ {r:'Voice phone calls as a first-class channel, not an afterthought',w:'Voiceflow',col:'var(--rose)',
+  why:'Voice is central to Voiceflow\'s positioning, not bolted on. If the brief is phone-based CX or a voice agent, this is the tool the job descriptions name and the one built for the constraints voice imposes.'},
+ {r:'Swap freely between LLM providers as prices and models change',w:'Dify',col:'var(--teal)',
+  why:'Dify is deliberately model-agnostic with a dropdown selector across dozens of providers, so switching is a config change rather than a rebuild. Commercially this is real leverage when a cheaper model ships mid-project.'},
+ {r:'A non-technical founder maintains it after you hand over',w:'Dify',col:'var(--teal)',
+  why:'The handover surface is smallest here: re-upload a document, edit one instructions box. A Botpress canvas of branching nodes and a Voiceflow multi-flow design both need someone who understands the structure. Ask "who edits this in six months" before you choose.'}
+];
+ROWS.forEach((row,k)=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td>'+row.r+'</td><td class="w">'+row.w+'</td>';
+  tr.onclick=()=>{
+    document.querySelectorAll('#mtx tbody tr').forEach(x=>x.classList.remove('act'));tr.classList.add('act');
+    out.innerHTML='<span class="lbl" style="color:'+row.col+'">BEST FIT · '+row.w.toUpperCase()+'</span>'
+      +'<p style="font-size:14px;color:var(--ink)">'+row.r+'</p>'
+      +'<p style="font-size:13.5px;margin-top:10px">'+row.why+'</p>';
+  };
+  tb.appendChild(tr);
+});
+})();
+
+/* ===== SIM 8: Pick The Right Tool (matching game) ===== */
+(()=>{
+const SCENARIOS=[
+ {q:'A gym has a 30-page membership FAQ and wants a website bot answering it by Friday. One person will maintain it.',a:'dify',
+  why:'Documents plus unpredictable questions plus a fast deadline plus a solo maintainer → Dify.'},
+ {q:'A clinic bot must state its cancellation-fee policy word for word, every time, with no variation whatsoever.',a:'botpress',
+  why:'A binding figure that cannot be paraphrased → a deterministic branch in Botpress.'},
+ {q:'An airline\'s CX team of six needs to redesign its phone support conversation. Legal must approve the wording before build.',a:'voiceflow',
+  why:'Voice channel, multiple reviewers, copy sign-off before build → Voiceflow.'},
+ {q:'A delivery company needs one bot serving both a website widget and a Telegram group of 80 field riders.',a:'botpress',
+  why:'One build, many channels, same brain → Botpress multi-channel deployment.'},
+ {q:'A hospital insists all patient data stays on their own servers. Nothing may sit with a vendor.',a:'either',
+  why:'Self-hosting is required → Dify or Botpress, both open-source. Voiceflow is ruled out by the constraint.'},
+ {q:'A founder wants a bot live tonight for a demo tomorrow, from three PDFs she already has.',a:'dify',
+  why:'Fastest path from existing documents to a live public URL → Dify.'}
+];
+let idx=0,score=0;
+const scenEl=document.getElementById('pickScenario'),btnsEl=document.getElementById('pickBtns'),whyEl=document.getElementById('pickWhy'),scoreEl=document.getElementById('pickScore');
+const OPTS=[{k:'dify',l:'Dify'},{k:'botpress',l:'Botpress'},{k:'voiceflow',l:'Voiceflow'},{k:'either',l:'Dify or Botpress (self-host)'}];
+const render=()=>{
+  if(idx>=SCENARIOS.length){scenEl.innerHTML='<span>DONE</span>All six briefs complete. Final score '+score+' / '+SCENARIOS.length+'.';btnsEl.innerHTML='';whyEl.innerHTML='';return}
+  const s=SCENARIOS[idx];
+  scenEl.innerHTML='<span>BRIEF '+(idx+1)+' / '+SCENARIOS.length+'</span>'+s.q;
+  whyEl.innerHTML='';btnsEl.innerHTML='';
+  OPTS.forEach(o=>{
+    const b=document.createElement('button');b.className='matchBtn';b.textContent=o.l;
+    b.onclick=()=>{
+      document.querySelectorAll('#pickBtns .matchBtn').forEach(x=>x.classList.add('wrong'));
+      if(o.k===s.a){b.classList.remove('wrong');b.classList.add('right');score++}
+      else{const cb=[...document.querySelectorAll('#pickBtns .matchBtn')].find(x=>x.textContent===OPTS.find(z=>z.k===s.a).l);if(cb){cb.classList.remove('wrong');cb.classList.add('right')}}
+      whyEl.innerHTML='<b>'+(o.k===s.a?'Correct — ':'Not quite — ')+'</b>'+s.why;
+      scoreEl.textContent='Score '+score+' / '+SCENARIOS.length;
+      document.querySelectorAll('#pickBtns .matchBtn').forEach(x=>x.style.pointerEvents='none');
+      setTimeout(()=>{idx++;render()},1900);
+    };
+    btnsEl.appendChild(b);
+  });
+};
+render();
+})();
+
+/* ===== SIM 9: Will The Free Tier Survive? ===== */
+(()=>{
+const dial=document.getElementById('volDial'),val=document.getElementById('volVal'),cards=document.getElementById('calcCards'),gap=document.getElementById('calcGap');
+const MPC=6;
+const render=()=>{
+  const conv=+dial.value, msgs=conv*MPC, perDay=msgs/30;
+  val.textContent=conv.toLocaleString()+' conversations/month · '+msgs.toLocaleString()+' messages';
+  const days=lim=>{const d=lim/perDay;return d>=30?null:(d<1?'under a day':(d<2?'about 1 day':'about '+Math.round(d)+' days'))};
+  const TIERS=[
+    {nm:'Dify',tier:'Cloud Sandbox · 200 credits TOTAL',lim:200,total:true,
+     extra:'50 knowledge docs · 5 apps · 1 seat · 30-day logs',
+     esc:'Paid plan, or self-host the open-source version — free and unlimited on your own server.'},
+    {nm:'Botpress',tier:'Pay-as-you-go · 500 msgs/month + $5 AI credit',lim:500,total:false,
+     extra:'1 collaborator seat · unlimited bots · AI Spend metered separately',
+     esc:'Plus $89/mo, Team $495/mo, Managed $1,495/mo — or self-host the open-source version.'},
+    {nm:'Voiceflow',tier:'Sandbox · 1,000 credits/month',lim:1000,total:false,
+     extra:'2 agents · 1 editor seat · 7-day version history',
+     esc:'Pro $60/editor/mo or Business $150/editor/mo. No free production path.'}
+  ];
+  cards.innerHTML=TIERS.map(t=>{
+    const d=days(t.lim);
+    let cls,big,note;
+    if(t.total){
+      if(msgs<=t.lim){cls='warn';big='Fits — once';note='200 credits is a <b>lifetime</b> allowance, not monthly. Even if month one fits, month two has nothing left.'}
+      else{cls='bad';big='Gone in '+d;note='200 credits <b>total</b>, ever. At '+Math.round(perDay)+' messages/day this is exhausted almost immediately.'}
+    }else if(d===null){cls='ok';big='Survives the month';note='Comfortably inside the monthly limit at this volume.'}
+    else{cls='bad';big='Breaks in '+d;note='Needs '+msgs.toLocaleString()+' messages against a '+t.lim.toLocaleString()+'/month limit — roughly '+(msgs/t.lim).toFixed(1)+'× over.'}
+    return '<div class="calcCard '+cls+'"><div class="cnm">'+t.nm+'</div><div class="ctier">'+t.tier+'</div>'
+      +'<div class="cbig">'+big+'</div><div class="cnote">'+note+'</div>'
+      +'<div class="cnote" style="border-top:1px dashed var(--line);margin-top:10px;padding-top:8px">'+t.extra+'</div>'
+      +'<div class="cnote" style="color:var(--orange2)">↑ '+t.esc+'</div></div>';
+  }).join('');
+  if(msgs<=200){
+    gap.innerHTML='<b>At this volume you can genuinely prototype for free — briefly.</b> Even here, Dify\'s 200 credits are a lifetime total, so treat it as a demo budget rather than a running cost. This is roughly the volume of a personal project or a proof-of-concept for a client meeting.';
+  }else if(msgs<=1000){
+    gap.innerHTML='<b>Dify\'s sandbox is already gone; the other two hold — for now.</b> This is the dangerous zone, because a free build genuinely works and then quietly stops working in week three. If you are pitching a client at this volume, quote a paid tier from day one rather than discovering the ceiling in production.';
+  }else{
+    gap.innerHTML='<b>Every free tier is broken at this volume, and it is not close.</b> '+msgs.toLocaleString()+' messages a month against limits of 200, 500 and 1,000. <b>This is the calculation to run before you promise anyone a free chatbot.</b> The two honest paths are a paid plan, or self-hosting Dify or Botpress on the client\'s own server — which is exactly where open-source stops being a philosophical nicety and becomes the commercial answer.';
+  }
+};
+dial.addEventListener('input',render);render();
+})();
+</script>
+</body>
+</html>
