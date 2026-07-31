@@ -672,13 +672,45 @@ travellers, and one contact detail.</pre>
 
   <div class="card">
     <h4 style="color:var(--orange2)">Step-by-step demo (share screen)</h4>
-    <p style="font-size:14.5px"><b>Step 1 —</b> Go to <code class="k">botpress.com</code>, sign in, create a new bot. You land in Studio on the canvas.</p>
-    <p style="font-size:14.5px"><b>Step 2 —</b> Open <b style="color:var(--ink)">Knowledge Bases</b> in the left sidebar. Upload the same four Wanderline documents, plus the packages page URL. Point out that you just did the Dify step again in a different tool — the retrieval concept transfers, only the buttons changed.</p>
-    <p style="font-size:14.5px"><b>Step 3 —</b> On the canvas, add an <b style="color:var(--ink)">Autonomous Node</b>. In its instructions, describe the bot's job in plain language and use the macro menu to reference the knowledge base. This is now your open-road default.</p>
-    <p style="font-size:14.5px"><b>Step 4 —</b> Now the important part. Create a separate node called <code class="k">cancellation_policy</code>. Inside it, put a plain <b style="color:var(--ink)">text card containing the refund slab typed out word for word.</b> No LLM anywhere in this node. Route to it on the cancellation intent.</p>
-    <p style="font-size:14.5px"><b>Step 5 —</b> Create a second locked node: <code class="k">human_escalation</code>. One message — "I'm getting someone on this now" — and a handoff. Route anything that smells like distress or a payment dispute here.</p>
-    <p style="font-size:14.5px"><b>Step 6 —</b> Add a <b style="color:var(--ink)">Table</b> to store captured leads. Have the Autonomous Node write travel month, party size and contact into it.</p>
-    <p style="font-size:14.5px"><b>Step 7 —</b> Test in the emulator. Then open <b style="color:var(--ink)">Integrations → Webchat</b>, publish, copy the embed snippet. Then add <b style="color:var(--ink)">Telegram</b>: create a bot via BotFather, paste the token in, publish. <b style="color:var(--ink)">Same brain, two channels, one build.</b></p>
+    <p style="font-size:14.5px"><b>Step 1 —</b> Go to <code class="k">botpress.com</code>, sign in, click <b style="color:var(--ink)">Create Bot</b>, name it <i>Wanderline Enquiry Desk</i>. Wait for Studio to open — you land on the workflow canvas with a single <code class="k">Start</code> node.</p>
+    <p style="font-size:14.5px"><b>Step 2 —</b> Open <b style="color:var(--ink)">Knowledge Bases</b> in the left sidebar, click <b style="color:var(--ink)">Create Knowledge Base</b>, name it <i>Wanderline KB</i>, then <b style="color:var(--ink)">Add Sources</b> and upload the same four Wanderline documents. Wait for indexing to finish before moving on — point out that you just did the Dify step again in a different tool, only the buttons changed.</p>
+    <p style="font-size:14.5px"><b>Step 3 —</b> Open <b style="color:var(--ink)">Tables</b>, click <b style="color:var(--ink)">Create Table</b>, name it <code class="k">LeadsTable</code>, and add three columns:</p>
+    <table class="tbl" style="margin:4px 0 14px"><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody>
+      <tr><td>travel_month</td><td>Text</td></tr>
+      <tr><td>party_size</td><td>Number</td></tr>
+      <tr><td>contact</td><td>Text</td></tr>
+    </tbody></table>
+    <p style="font-size:14.5px"><b>Step 4 —</b> Back on the canvas, the current Botpress builds around a single <b style="color:var(--ink)">Autonomous Node</b> as the AI brain, with everything else attached to it as tools rather than drawn as separate nodes. If the workflow is empty, drag an Autonomous Node onto the canvas and connect it to <code class="k">Start</code>.</p>
+    <p style="font-size:14.5px"><b>Step 5 —</b> Select the Autonomous Node and replace its default prompt with instructions covering the role, the exact fallback line, what to always collect, and where to route:</p>
+    <pre class="code"><span class="cm"># Wanderline Enquiry Desk — Autonomous Node prompt</span>
+
+You are the enquiry assistant for Wanderline Travel.
+Answer traveller questions using the attached Knowledge Base.
+
+If the answer is not available in the Knowledge Base, say:
+<span class="st">"I don't have that detail — let me get Divya to confirm."</span>
+
+<span class="kw">ALWAYS COLLECT</span>
+&bull; travel month
+&bull; number of travellers
+&bull; one contact detail
+
+After collecting all three, use the LeadsTable tool to save them.
+
+<span class="kw">ROUTING</span>
+If the user wants to cancel a booking, route them to the
+cancellation_policy node.
+If the user reports an emergency, payment dispute, or an
+ongoing trip issue, route them to the human_escalation node.
+
+Be brief, friendly and professional.</pre>
+    <p style="font-size:14.5px"><b>Step 6 —</b> With the Autonomous Node selected, open <b style="color:var(--ink)">Tools → Add Tool → Search Knowledge</b> and choose the <i>Wanderline KB</i> built in Step 2.</p>
+    <p style="font-size:14.5px"><b>Step 7 —</b> Click <b style="color:var(--ink)">Add Tool</b> again, select <code class="k">LeadsTable</code>, and enable <b style="color:var(--ink)">Create Rows</b>. In the tool instructions, spell out the mapping — <code class="k">travel_month</code>, <code class="k">party_size</code>, <code class="k">contact</code> — and tell it to create only one row per conversation.</p>
+    <p style="font-size:14.5px"><b>Step 8 —</b> Now the important part. Add a Standard Node named <code class="k">cancellation_policy</code> with a plain <b style="color:var(--ink)">text card containing the refund slab typed out word for word.</b> No LLM anywhere in this node — this response should never be generated.</p>
+    <p style="font-size:14.5px"><b>Step 9 —</b> Add a second locked Standard Node named <code class="k">human_escalation</code>, with a text card reading: "I'm getting someone on this right now. A member of our operations team will contact you shortly."</p>
+    <p style="font-size:14.5px"><b>Step 10 —</b> Back on the canvas, drag a connector from the Autonomous Node to each locked node and choose <b style="color:var(--ink)">AI Transition</b> both times. Give each transition a short description of when it should fire — cancellations and refund questions for one, emergencies and payment disputes for the other — and Botpress routes automatically from there.</p>
+    <p style="font-size:14.5px"><b>Step 11 —</b> Test in the emulator: a knowledge-base question, a cancellation question, a month/party-size/contact combo (confirm a row lands in LeadsTable), and an "emergency" message (confirm it hands off).</p>
+    <p style="font-size:14.5px"><b>Step 12 —</b> Click <b style="color:var(--ink)">Publish</b>, enable the <b style="color:var(--ink)">Webchat</b> integration, and optionally add <b style="color:var(--ink)">Telegram</b> — create a bot via BotFather, paste the token in, publish. <b style="color:var(--ink)">Same brain, two channels, one build.</b></p>
   </div>
 
   <div class="say"><span class="who">🎙 Instructor Says — Why Telegram, and not just the website</span>
@@ -755,12 +787,52 @@ travellers, and one contact detail.</pre>
 
   <div class="card">
     <h4 style="color:var(--orange2)">Step-by-step demo (share screen)</h4>
-    <p style="font-size:14.5px"><b>Step 1 —</b> Go to <code class="k">voiceflow.com</code>, sign in, create a new agent. Choose the voice-oriented starting point and name it <i>Wanderline Guide Onboarding</i>.</p>
-    <p style="font-size:14.5px"><b>Step 2 —</b> Open <b style="color:var(--ink)">Knowledge Base</b>. Upload the guide handbook and the commission policy. Note the environment scoping — you're loading this into dev, not production.</p>
-    <p style="font-size:14.5px"><b>Step 3 —</b> On the canvas, lay out the conversation with blocks. Do not rush this — <b style="color:var(--ink)">narrate each block as a decision someone made</b>, not a widget you dragged. That's the whole pedagogical point of this section.</p>
-    <p style="font-size:14.5px"><b>Step 4 —</b> Add a <b style="color:var(--ink)">Knowledge Base Query</b> step for the payment-cycle question, so guides can ask it in their own words.</p>
-    <p style="font-size:14.5px"><b>Step 5 —</b> For the commission policy, use a <b style="color:var(--ink)">plain message block with Farah's approved wording typed in verbatim.</b> Same principle as the Botpress deterministic branch, arrived at from a completely different direction — here it's locked because a human approved that sentence, not just because it's a number.</p>
-    <p style="font-size:14.5px"><b>Step 6 —</b> Hit <b style="color:var(--ink)">Prototype</b>, run it as a voice conversation, then share the prototype link. Say clearly: <i>this link is the deliverable a conversation designer sends for sign-off.</i></p>
+    <p style="font-size:14.5px"><b>Step 1 —</b> Go to <code class="k">voiceflow.com</code>, sign in, click <b style="color:var(--ink)">Create Agent</b>, select <b style="color:var(--ink)">Voice Agent</b> (Chat Agent works too), name it <i>Wanderline Guide Onboarding Assistant</i>, click <b style="color:var(--ink)">Create</b>. You land in the Agent Builder.</p>
+    <p style="font-size:14.5px"><b>Step 2 —</b> Open <b style="color:var(--ink)">Knowledge</b> in the left sidebar, click <b style="color:var(--ink)">Add Source</b>, and upload the <i>Guide Handbook</i> and <i>Commission Policy</i>. Wait for both to finish indexing — note the environment scoping as you do it, you're loading this into dev, not production. The Knowledge Base is now available to every playbook in the agent.</p>
+    <p style="font-size:14.5px"><b>Step 3 —</b> Open <b style="color:var(--ink)">Playbooks</b>, click <b style="color:var(--ink)">Create Playbook</b>, name it <code class="k">Guide Playbook</code>. This becomes the primary conversation handler for the assistant — don't rush the next step, <b style="color:var(--ink)">narrate each topic and instruction as a decision someone made</b>, not a field you filled in. That's the whole pedagogical point of this section.</p>
+    <p style="font-size:14.5px"><b>Step 4 —</b> Under <b style="color:var(--ink)">Trigger</b>, add the topics that should hand the conversation to this playbook: guide onboarding, guide responsibilities, payment cycle, safety procedures, incident reporting, general questions.</p>
+    <p style="font-size:14.5px"><b>Step 5 —</b> Replace the playbook's default instructions with:</p>
+    <pre class="code"><span class="cm"># Guide Playbook — instructions</span>
+
+You are Wanderline's internal guide onboarding assistant.
+
+Use the Knowledge Base to answer questions about:
+&bull; guide onboarding
+&bull; payment cycle
+&bull; guide responsibilities
+&bull; safety procedures
+&bull; emergency protocols
+&bull; incident reporting
+
+Answer clearly and professionally.
+Only use information available in the Knowledge Base.
+
+If the answer is not available, tell the guide that they
+should contact their operations manager.
+<span class="kw">Do not invent policies or procedures.</span></pre>
+    <p style="font-size:14.5px"><b>Step 6 —</b> Inside the Guide Playbook, open <b style="color:var(--ink)">Tools</b> and verify <b style="color:var(--ink)">Knowledge Base</b> is enabled. No extra configuration needed — the uploaded documents are already available at the agent level.</p>
+    <p style="font-size:14.5px"><b>Step 7 —</b> Now the important part. Some responses should never be generated by the AI. Append this to the bottom of the Guide Playbook's instructions so the commission policy always returns verbatim:</p>
+    <pre class="code"><span class="cm"># Appended to the bottom of the Guide Playbook</span>
+
+If the user specifically asks about the commission policy,
+reply ONLY with the approved wording below.
+
+<span class="st">&lt;PASTE THE ENTIRE COMMISSION POLICY HERE&gt;</span>
+
+<span class="kw">Do not summarize it.
+Do not modify it.
+Do not explain it.</span>
+Return it exactly as written.</pre>
+    <p style="font-size:14.5px"><b>Step 8 —</b> Open <b style="color:var(--ink)">Workflows</b> in the left sidebar, create a new workflow, drag a playbook node onto the canvas, and pick <code class="k">Guide Playbook</code> from the existing-playbook dropdown. Connect <code class="k">Start</code> to it, so the workflow reads <code class="k">Start → Guide Playbook</code>.</p>
+    <p style="font-size:14.5px"><b>Step 9 —</b> Click <b style="color:var(--ink)">Run</b> and test:</p>
+    <table class="tbl" style="margin:4px 0 14px"><thead><tr><th>Ask</th><th>Expected</th></tr></thead><tbody>
+      <tr><td>"What should I do before starting a tour?"</td><td>Answer comes from the Guide Handbook</td></tr>
+      <tr><td>"When do guides receive their payments?"</td><td>Knowledge Base retrieves the payment schedule</td></tr>
+      <tr><td>"What should I do if a traveller becomes sick during a trek?"</td><td>Answer comes from the Guide Handbook</td></tr>
+      <tr><td>"Can I negotiate my commission directly with travellers?"</td><td>Returns the exact commission policy from Step 7, verbatim</td></tr>
+      <tr><td>"Can you book hotel rooms for me?"</td><td>States the information is unavailable rather than inventing an answer</td></tr>
+    </tbody></table>
+    <p style="font-size:14.5px"><b>Step 10 —</b> Once every test case passes, click <b style="color:var(--ink)">Publish</b>, wait for deployment, then click <b style="color:var(--ink)">Prototype</b> (or <b style="color:var(--ink)">Share</b>) and copy the link. Say clearly: <i>this link is the deliverable a conversation designer sends for sign-off.</i></p>
   </div>
 
   <div class="sim">
